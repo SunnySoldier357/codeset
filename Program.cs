@@ -15,6 +15,7 @@ namespace codeset
 
             var code = new CodeWrapper();
             code.InstallExtension("schneiderpat.aspnet-helper");
+            code.InstallExtension("schneiderpat.aspnet-helper");
 
             var result = Parser.Default
                 .ParseArguments<Options>(args)

@@ -5,22 +5,33 @@ namespace codeset.Models
 {
     public class CodeWrapper
     {
-        //* Public Methods
+        //* Private Properties
+        private Process bashProcess { get; set; }
 
-        public bool InstallExtension(string extension)
+        //* Constructors
+        public CodeWrapper()
         {
-            var bashProcess = new Process();
+            bashProcess = new Process();
             bashProcess.StartInfo.FileName = "bash";
             bashProcess.StartInfo.RedirectStandardInput = true;
             bashProcess.StartInfo.RedirectStandardOutput = true;
             bashProcess.StartInfo.CreateNoWindow = true;
             bashProcess.StartInfo.UseShellExecute = false;
-            bashProcess.Start();
+        }
 
+        ~CodeWrapper()
+        {
+            bashProcess.WaitForExit();
+        }
+
+        //* Public Methods
+
+        public bool InstallExtension(string extension)
+        {
+            bashProcess.Start();
             bashProcess.StandardInput.WriteLine("code --install-extension {0}", extension);
             bashProcess.StandardInput.Flush();
             bashProcess.StandardInput.Close();
-            bashProcess.WaitForExit();
 
             Console.WriteLine(bashProcess.StandardOutput.ReadToEnd());
 
