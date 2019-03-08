@@ -8,6 +8,11 @@ namespace codeset
     {
         static void Main(string[] args)
         {
+            //* Steps to test the application
+            // dotnet publish -c release -r linux-x64
+            // chmod 777 bin/release/netcoreapp2.1/linux-x64/publish/codeset
+            // bin/release/netcoreapp2.1/linux-x64/publish/codeset
+
             var result = Parser.Default
                 .ParseArguments<Options>(args)
                 .WithParsed(options => RunCommand(options));
