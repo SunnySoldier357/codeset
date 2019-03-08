@@ -10,6 +10,11 @@ namespace codeset.Models
             HelpText = "The txt file that contains a list of extensions.")]
         public string ExtensionFile { get; set; }
 
+        [Option("setfile",
+            HelpText = "The JSON file that contains the required settings formatted correctly")]
         public string SettingFile { get; set; }
+
+        [Option('p', "print", HelpText = "Print hello test")]
+        public bool PrintHello { get; set; }
     }
 }
