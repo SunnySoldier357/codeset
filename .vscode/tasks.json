@@ -2,12 +2,12 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "codeset build",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/codeset.csproj"
+                "${workspaceFolder}/codeset/codeset.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

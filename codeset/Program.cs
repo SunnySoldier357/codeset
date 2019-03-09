@@ -15,8 +15,6 @@ namespace codeset
 
             var result = FileWrapper.ReadExtensions("/home/sandeepsingh/Repos/Configuration/VS Code/extensions.txt");
 
-            Console.WriteLine(result.ToString());
-
             var parsed = Parser.Default
                 .ParseArguments<Options>(args)
                 .WithParsed(options => RunCommand(options));
