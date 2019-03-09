@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -18,43 +19,49 @@ namespace codeset.Models
         {
             var result = new Dictionary<string, List<string>>();
 
-
-            using (StreamReader stream = new StreamReader(extensionFilePath))
+            try
             {
-                string line = null;
-                string tempHeading = null;
-                var tempExtensions = new List<string>();
-
-                while ((line = stream.ReadLine()) != null)
+                using (StreamReader stream = new StreamReader(extensionFilePath))
                 {
-                    line = line.Trim();
+                    string line = null;
+                    string tempHeading = null;
+                    var tempExtensions = new List<string>();
 
-                    if (line.Length > 0)
+                    while ((line = stream.ReadLine()) != null)
                     {
-                        if (!line.StartsWith('-'))
-                        {
-                            if (tempHeading != null)
-                            {
-                                result.Add(tempHeading, tempExtensions);
-                                tempExtensions = new List<string>();
-                            }
+                        line = line.Trim();
 
-                            // The heading like 'Required'
-                            tempHeading = line;
-                        }
-                        else
+                        if (line.Length > 0)
                         {
-                            // The actual extension
-                            tempExtensions.Add(line.Substring(1).Trim());
+                            if (!line.StartsWith('-'))
+                            {
+                                if (tempHeading != null)
+                                {
+                                    result.Add(tempHeading, tempExtensions);
+                                    tempExtensions = new List<string>();
+                                }
+
+                                // The heading like 'Required'
+                                tempHeading = line;
+                            }
+                            else
+                            {
+                                // The actual extension
+                                tempExtensions.Add(line.Substring(1).Trim());
+                            }
                         }
                     }
-                }
 
-                if (tempHeading != null)
-                {
-                    result.Add(tempHeading, tempExtensions);
-                    tempExtensions = new List<string>();
+                    if (tempHeading != null)
+                    {
+                        result.Add(tempHeading, tempExtensions);
+                        tempExtensions = new List<string>();
+                    }
                 }
+            }
+            catch (Exception)
+            {
+                return null;
             }
 
             return result;
