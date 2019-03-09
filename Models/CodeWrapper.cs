@@ -26,6 +26,15 @@ namespace codeset.Models
 
         //* Public Methods
 
+        /// <summary>
+        /// Installs the specified extension for VS Code.
+        /// </summary>
+        /// <param name="extension">
+        /// The actual extension id, different from the name.
+        /// </param>
+        /// <returns>
+        /// True if the extension was successfully installed, False otherwise.
+        /// </returns>
         public bool InstallExtension(string extension)
         {
             bashProcess.Start();
@@ -33,9 +42,14 @@ namespace codeset.Models
             bashProcess.StandardInput.Flush();
             bashProcess.StandardInput.Close();
 
-            Console.WriteLine(bashProcess.StandardOutput.ReadToEnd());
+            string result = bashProcess.StandardOutput.ReadToEnd().Trim();
 
-            return true;
+            // If the string ends in "successfully installed!" or "already installed." return true
+            if (result.Substring(result.Length - 23) == "successfully installed!" ||
+                result.Substring(result.Length - 18) == "already installed.")
+                return true;
+            else
+                return false;
         }
     }
 }

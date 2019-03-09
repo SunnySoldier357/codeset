@@ -14,8 +14,8 @@ namespace codeset
             // bin/release/netcoreapp2.1/linux-x64/publish/codeset
 
             var code = new CodeWrapper();
-            code.InstallExtension("schneiderpat.aspnet-helper");
-            code.InstallExtension("schneiderpat.aspnet-helper");
+            Console.WriteLine(code.InstallExtension("schneiderpat.aspnet-helper"));
+            Console.WriteLine(code.InstallExtension("n8rzz.ss-octopus"));
 
             var result = Parser.Default
                 .ParseArguments<Options>(args)
