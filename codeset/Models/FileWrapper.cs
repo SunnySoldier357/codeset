@@ -61,7 +61,7 @@ namespace codeset.Models
             }
             catch (Exception)
             {
-                return null;
+                result = null;
             }
 
             return result;

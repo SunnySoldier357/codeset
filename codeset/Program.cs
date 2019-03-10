@@ -22,9 +22,6 @@ namespace codeset
 
         public static int RunCommand(Options options)
         {
-            if (options.PrintHello)
-                Console.WriteLine("Hello World!");
-
             return 0;
         }
     }

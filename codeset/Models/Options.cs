@@ -13,8 +13,5 @@ namespace codeset.Models
         [Option("setfile",
             HelpText = "The JSON file that contains the required settings formatted correctly")]
         public string SettingFile { get; set; }
-
-        [Option('p', "print", HelpText = "Print hello test")]
-        public bool PrintHello { get; set; }
     }
 }
