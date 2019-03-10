@@ -24,5 +24,29 @@ namespace codesetTest
 
             Assert.IsNull(result);
         }
+
+        [TestMethod]
+        public void ReadExtensionsNullTest()
+        {
+            Dictionary<string, List<string>> result = null;
+
+            try
+            {
+                result = FileWrapper.ReadExtensions(null);
+            }
+            catch (Exception)
+            {
+                Assert.Fail("Null File Path caused an error");
+            }
+
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public void ReadExtensionsSimpleAlgorithmTest()
+        {
+            // TODO: Create a new file and use that to check the algorithm
+            Assert.Inconclusive();
+        }
     }
 }
