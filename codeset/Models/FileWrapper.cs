@@ -66,5 +66,24 @@ namespace codeset.Models
 
             return result;
         }
+
+        public static string ReadSettings(string settingFilePath)
+        {
+            var result = "";
+
+            try
+            {
+                using (StreamReader stream = new StreamReader(settingFilePath))
+                {
+                    
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+        }
     }
 }
