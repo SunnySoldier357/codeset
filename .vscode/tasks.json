@@ -10,6 +10,11 @@
                 "${workspaceFolder}/codeset/codeset.csproj"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "codeset publish",
+            "type": "shell",
+            "command": "./.vscode/Scripts/publish.sh"
         }
     ]
 }
