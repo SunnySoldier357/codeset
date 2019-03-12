@@ -14,6 +14,17 @@ namespace codesetTest
     {
         //* Test Methods
 
+        /// <summary>
+        /// <para>
+        /// Tests if the ReadExtension() method can correctly handle empty path.
+        /// </para>
+        /// <para>
+        /// Input: "" for path
+        /// </para>
+        /// <para>
+        /// Expected Output: null
+        /// </para>
+        /// </summary>
         [TestMethod]
         public void ReadExtensionsEmptyTest()
         {
@@ -31,6 +42,17 @@ namespace codesetTest
             Assert.IsNull(result);
         }
 
+        /// <summary>
+        /// <para>
+        /// Tests if the ReadExtension() method can correctly handle null path.
+        /// </para>
+        /// <para>
+        /// Input: null for path
+        /// </para>
+        /// <para>
+        /// Expected Output: null
+        /// </para>
+        /// </summary>
         [TestMethod]
         public void ReadExtensionsNullTest()
         {
@@ -48,6 +70,19 @@ namespace codesetTest
             Assert.IsNull(result);
         }
 
+        /// <summary>
+        /// <para>
+        /// Tests the algorithm of the ReadExtensions() method to ensure it can
+        /// correctly turn file at the path into a Dictionary.
+        /// </para>
+        /// <para>
+        /// Input: Auto-generated file formatted nicely
+        /// </para>
+        /// <para>
+        /// Expected Output: Required and C# as keys and items 1-4 as values in
+        /// lists to their respective key
+        /// </para>
+        /// </summary>
         [TestMethod]
         public void ReadExtensionsAlgorithmTest()
         {
@@ -101,6 +136,20 @@ namespace codesetTest
             }
         }
 
+        /// <summary>
+        /// <para>
+        /// Tests the algorithm of the ReadExtensions() method to ensure it can
+        /// correctly turn the file at the path into a Dictionary.
+        /// </para>
+        /// <para>
+        /// Input: Auto-generated file formatted randomly but using the correct
+        /// conventions
+        /// </para>
+        /// <para>
+        /// Expected Output: Required and C# as keys and items 1-4 as values in
+        /// lists to their respective key
+        /// </para>
+        /// </summary>
         [TestMethod]
         public void ReadExtensionsComplexAlgorithmTest()
         {
@@ -156,6 +205,16 @@ namespace codesetTest
         }
 
         //* Private Methods
+
+        /// <summary>
+        /// Creates a file with the specified name and contents in a automatically
+        /// created Test folder (deep in Debug folder).
+        /// </summary>
+        /// <param name="fileName">The name of the tct file to be created.</param>
+        /// <param name="fileContents">The lines of the txt file.</param>
+        /// <returns>
+        /// Returns a string that represents the full path to the created file.
+        /// </returns>
         private string createFile(string fileName, string[] fileContents)
         {
             string path = Directory.GetCurrentDirectory();
@@ -164,8 +223,9 @@ namespace codesetTest
             dir.CreateSubdirectory("Test");
 
             var directories = dir.GetDirectories();
-            var testDir = directories.FirstOrDefault(d => d.Name == "Test");
+            DirectoryInfo testDir = directories.FirstOrDefault(d => d.Name == "Test");
 
+            // Make sure of '/' vs '\'
             OSPlatform os = Utility.GetCurrentOS();
             string divider = "/";
             if (os.Equals(OSPlatform.Windows))
@@ -190,6 +250,11 @@ namespace codesetTest
             return filePath;
         }
 
+        /// <summary>
+        /// Deletes the txt file specified from the automatically created Test
+        /// folder (deep in Debug folder).
+        /// </summary>
+        /// <param name="fileName">The name of the txt file to be deleted.</param>
         private void deleteFile(string fileName)
         {
             string path = Directory.GetCurrentDirectory();
