@@ -10,14 +10,48 @@ namespace codesetTest
     {
         //* Test Methods
 
+        /// <summary>
+        /// <para>
+        /// Tests if the Setting class constructor can correctly handle null value.
+        /// </para>
+        /// <para>
+        /// Input: null for lines
+        /// </para>
+        /// <para>
+        /// Expected Output: null for all properties of Setting
+        /// </para>
+        /// </summary>
         [TestMethod]
         public void NullLinesTest() =>
             createAndTestSetting(null, null, null, null);
 
+        /// <summary>
+        /// <para>
+        /// Tests if the Setting class constructor can correctly handle empty value.
+        /// </para>
+        /// <para>
+        /// Input: empty List for lines
+        /// </para>
+        /// <para>
+        /// Expected Output: null for all properties of Setting
+        /// </para>
+        /// </summary>
         [TestMethod]
         public void EmptyLinesTest() =>
             createAndTestSetting(new List<string>(), null, null, null);
 
+        /// <summary>
+        /// <para>
+        /// Tests if the Setting class constructor can handle a simple key-value
+        /// pair value provided.
+        /// </para>
+        /// <para>
+        /// Input: "key": "value"
+        /// </para>
+        /// <para>
+        /// Expected Output: Key: "key", Value: "value", Instruction: null
+        /// </para>
+        /// </summary>
         [TestMethod]
         public void SimpleLinesTest()
         {
@@ -29,8 +63,21 @@ namespace codesetTest
             createAndTestSetting(lines, null, "\"key\"", "\"value\"");
         }
 
+        /// <summary>
+        /// <para>
+        /// Tests if the Setting class constructor can handle a multi line
+        /// key-value pair value provided.
+        /// </para>
+        /// <para>
+        /// Input: "key": [item1, item2] (over multiple lines)
+        /// </para>
+        /// <para>
+        /// Expected Output: Key: "key", Value: "[\n    item1\n    item2\n]",
+        /// Instruction: null
+        /// </para>
+        /// </summary>
         [TestMethod]
-        public void ComplexLinesTest()
+        public void MultiLinesTest()
         {
             var lines = new List<string>
             {
@@ -48,6 +95,19 @@ namespace codesetTest
             createAndTestSetting(lines, null, "\"key\"", value);
         }
 
+        /// <summary>
+        /// <para>
+        /// Tests if the Setting class constructor can handle a simple key-value
+        /// pair value provided and return the correct value for the current OS.
+        /// </para>
+        /// <para>
+        /// Input: "key": "Windows:windows;OSX:osx;Linux:manjaro"
+        /// </para>
+        /// <para>
+        /// Expected Output: Key: "key", Value (Windows): "windows", Value (OSX):
+        /// "osx", Value (Linux): "manjaro", Instruction: null
+        /// </para>
+        /// </summary>
         [TestMethod]
         public void OSLinesTest()
         {
@@ -69,6 +129,20 @@ namespace codesetTest
                 string.Format("\"{0}\"", value));
         }
 
+        /// <summary>
+        /// <para>
+        /// Tests if the Setting class constructor can handle a simple key-value
+        /// pair value provided and return the instruction.
+        /// </para>
+        /// <para>
+        /// Input: // TODO: Path to bash executable
+        /// "\"key\": \"value\","
+        /// </para>
+        /// <para>
+        /// Expected Output: Key: "key", Value: null,
+        /// Instruction: "Path to bash executable"
+        /// </para>
+        /// </summary>
         [TestMethod]
         public void InstructionLinesTest()
         {
@@ -82,6 +156,19 @@ namespace codesetTest
         }
 
         //* Private Methods
+
+        /// <summary>
+        /// Creates a Setting instance based on parameter and tests it to the
+        /// provided values to ensure they are the same.
+        /// </summary>
+        /// <param name="lines">
+        /// The lines representing the setting from settings.json
+        /// </param>
+        /// <param name="instruction">
+        /// The right value for Setting's Instruction property.
+        /// </param>
+        /// <param name="key">The right value for Setting's Key property.</param>
+        /// <param name="value">The right value for Setting's Value property.</param>
         private void createAndTestSetting(List<string> lines, string instruction,
             string key, string value)
         {
