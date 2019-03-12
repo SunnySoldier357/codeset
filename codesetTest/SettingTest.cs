@@ -174,9 +174,15 @@ namespace codesetTest
         {
             Setting setting = new Setting(lines);
 
-            Assert.IsTrue(setting.Instruction == instruction);
-            Assert.IsTrue(setting.Key == key);
-            Assert.IsTrue(setting.Value == value);
+            Assert.IsTrue(setting.Instruction == instruction,
+                string.Format("Instruction - Expected Output: {0} vs Output: {1}",
+                    instruction, setting.Instruction));
+            Assert.IsTrue(setting.Key == key,
+                string.Format("Key - Expected Output: {0} vs Output: {1}",
+                    key, setting.Key));
+            Assert.IsTrue(setting.Value == value,
+                string.Format("Value - Expected Output: {0} vs Output: {1}",
+                    value, setting.Value));
         }
     }
 }
