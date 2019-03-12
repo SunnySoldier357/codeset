@@ -51,5 +51,16 @@ namespace codeset.Models
             else
                 return false;
         }
+
+        public void InstallAllExtensions(string path)
+        {
+            var extensions = FileWrapper.ReadExtensions(path);
+
+            foreach (var group in extensions.Values)
+            {
+                foreach (var extension in group)
+                    InstallExtension(extension);
+            }
+        }
     }
 }
