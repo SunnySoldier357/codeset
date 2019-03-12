@@ -6,20 +6,25 @@ namespace codeset.Models
     public class Setting
     {
         //* Public Properties
+        public string Instruction { get; }
         public string Key { get; }
-
         public string Value { get; set; }
-
-        public string Instruction { get; set; }
 
         //* Constructors
         public Setting(List<string> lines)
         {
-            if (lines.Count == 1)
-                Value = getValueForOs(lines[0]);
-            else
+            if (lines != null)
             {
-                // Convert lines to a single string with /n separating lines
+                if (lines.Count == 1)
+                {
+                    int index = lines[0].IndexOf(':');
+                    Key = lines[0].Substring(0, index).Trim();
+                    Value = getValueForOs(lines[0].Substring(index + 1).Trim());
+                }
+                else
+                {
+                    // Convert lines to a single string with /n separating lines
+                }
             }
         }
 
@@ -36,13 +41,28 @@ namespace codeset.Models
 
         private string getValueForOs(string value)
         {
-            string result = "";
+            string result = null;
+            OSPlatform os = getOS();
 
             // If value is formatted like Windows:custom; Linux:native then extract
             // the correct value for the current OS
-            if (Value.Contains(';'))
+            if (value.Contains(';'))
             {
-                string[] items = value.Split(';');
+                value = value.Replace("\"", "").Replace(",", "");
+                
+                string[] split = value.Split(';');
+                foreach (string item in split)
+                {
+                    string[] splitFurther = item.Split(':');
+
+                    if ((os.Equals(OSPlatform.Windows) && splitFurther[0].Trim() == "Windows") ||
+                        (os.Equals(OSPlatform.OSX) && splitFurther[0].Trim() == "OSX") ||
+                        (os.Equals(OSPlatform.Linux) && splitFurther[0].Trim() == "Linux"))
+                    {
+                        result = string.Format("\"{0}\"", splitFurther[1]);
+                        break;
+                    }
+                }
             }
 
             return result;
