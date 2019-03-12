@@ -8,7 +8,7 @@ namespace codeset.Models
         //* Public Properties
         public string Key { get; }
 
-        public string Value { get; }
+        public string Value { get; set; }
 
         public string Instruction { get; set; }
 
