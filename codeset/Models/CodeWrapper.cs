@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace codeset.Models
 {
@@ -15,6 +16,7 @@ namespace codeset.Models
             bashProcess.StartInfo.FileName = "bash";
             bashProcess.StartInfo.RedirectStandardInput = true;
             bashProcess.StartInfo.RedirectStandardOutput = true;
+            bashProcess.StartInfo.RedirectStandardError = true;
             bashProcess.StartInfo.CreateNoWindow = true;
             bashProcess.StartInfo.UseShellExecute = false;
         }
@@ -56,11 +58,24 @@ namespace codeset.Models
         {
             var extensions = FileWrapper.ReadExtensions(path);
 
+            int i = 1;
+            int total = extensions.Sum(e => e.Value.Count);
+
+            Console.WriteLine("\nBeginning to install {0} extension{1}.\n", total,
+                total == 1 ? "" : "s");
+
             foreach (var group in extensions.Values)
             {
                 foreach (var extension in group)
+                {
+                    Console.WriteLine("({0}/{1}) Installing {2}...",
+                        i++, total, extension);
                     InstallExtension(extension);
+                }
             }
+
+            Console.WriteLine("\nSuccessfully installed {0} extension{1}!", total,
+                total == 1 ? "" : "s");
         }
     }
 }
