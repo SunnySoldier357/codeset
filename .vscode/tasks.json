@@ -12,6 +12,16 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "codesetTest build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/codesetTest/codesetTest.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "codeset publish",
             "type": "shell",
             "command": "./.vscode/Scripts/publish.sh"
