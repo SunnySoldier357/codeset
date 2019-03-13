@@ -13,19 +13,49 @@ namespace codeset.Models
         //* Constructors
         public Setting(List<string> lines)
         {
-            if (lines != null)
+            if (lines != null && lines.Count >= 1)
             {
-                if (lines.Count == 1)
+                int i = 0;
+
+                foreach (string line in lines)
                 {
-                    int index = lines[0].IndexOf(':');
-                    Key = lines[0].Substring(0, index).Trim();
-                    Value = getValueForOs(lines[0].Substring(index + 1).Trim());
-                }
-                else
-                {
-                    // Convert lines to a single string with /n separating lines
+                    if (line.Contains("// TODO:"))
+                    {
+                        Instruction = line.Replace("// TODO:", "").Trim();
+                    }
+                    else
+                    {
+                        if (Key == null)
+                        {
+                            int index = line.IndexOf(':');
+                            Key = line.Substring(0, index).Trim();
+                            string tempValue = line.Substring(index + 1).Trim();
+
+                            if (i == lines.Count - 1)
+                            {
+                                if (tempValue.Contains(':'))
+                                    Value = getValueForOs(tempValue);
+                                else
+                                    Value = tempValue.Replace(",", "");
+                            }
+                            else
+                                Value = tempValue;
+                        }
+                        else
+                        {
+                            if (i == lines.Count - 1)
+                                Value += "\n" + line.Replace(",", "");
+                            else
+                                Value += "\n" + line;
+                        }
+                    }
+
+                    i++;
                 }
             }
+
+            if (Instruction != null)
+                Value = null;
         }
 
         //* Private Methods

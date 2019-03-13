@@ -82,14 +82,14 @@ namespace codesetTest
             var lines = new List<string>
             {
                 "\"key\": [",
-                "    item1",
-                "    item2",
+                "    \"item1\"",
+                "    \"item2\"",
                 "],"
             };
 
             string value = "[";
-            value += "\n    item1";
-            value += "\n    item2";
+            value += "\n    \"item1\"";
+            value += "\n    \"item2\"";
             value += "\n]";
 
             createAndTestSetting(lines, null, "\"key\"", value);
