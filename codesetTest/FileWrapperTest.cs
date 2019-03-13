@@ -16,34 +16,6 @@ namespace codesetTest
 
         /// <summary>
         /// <para>
-        /// Tests if the ReadExtension() method can correctly handle empty path.
-        /// </para>
-        /// <para>
-        /// Input: "" for path
-        /// </para>
-        /// <para>
-        /// Expected Output: null
-        /// </para>
-        /// </summary>
-        [TestMethod]
-        public void ReadExtensionsEmptyTest()
-        {
-            Dictionary<string, List<string>> result = null;
-
-            try
-            {
-                result = FileWrapper.ReadExtensions("");
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-
-            Assert.IsNull(result);
-        }
-
-        /// <summary>
-        /// <para>
         /// Tests if the ReadExtension() method can correctly handle null path.
         /// </para>
         /// <para>
@@ -61,6 +33,34 @@ namespace codesetTest
             try
             {
                 result = FileWrapper.ReadExtensions(null);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+
+            Assert.IsNull(result);
+        }
+
+        /// <summary>
+        /// <para>
+        /// Tests if the ReadExtension() method can correctly handle empty path.
+        /// </para>
+        /// <para>
+        /// Input: "" for path
+        /// </para>
+        /// <para>
+        /// Expected Output: null
+        /// </para>
+        /// </summary>
+        [TestMethod]
+        public void ReadExtensionsEmptyTest()
+        {
+            Dictionary<string, List<string>> result = null;
+
+            try
+            {
+                result = FileWrapper.ReadExtensions("");
             }
             catch (Exception e)
             {

@@ -22,7 +22,7 @@ namespace codesetTest
         /// </para>
         /// </summary>
         [TestMethod]
-        public void NullLinesTest() =>
+        public void ConstructorNullLinesTest() =>
             createAndTestSetting(null, null, null, null);
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace codesetTest
         /// </para>
         /// </summary>
         [TestMethod]
-        public void EmptyLinesTest() =>
+        public void ConstructorEmptyLinesTest() =>
             createAndTestSetting(new List<string>(), null, null, null);
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace codesetTest
         /// </para>
         /// </summary>
         [TestMethod]
-        public void SimpleLinesTest()
+        public void ConstructorSimpleLinesTest()
         {
             var lines = new List<string>
             {
@@ -77,7 +77,7 @@ namespace codesetTest
         /// </para>
         /// </summary>
         [TestMethod]
-        public void MultiLinesTest()
+        public void ConstructorMultiLinesTest()
         {
             var lines = new List<string>
             {
@@ -109,7 +109,7 @@ namespace codesetTest
         /// </para>
         /// </summary>
         [TestMethod]
-        public void OSLinesTest()
+        public void ConstructorOSLinesTest()
         {
             var lines = new List<string>
             {
@@ -144,7 +144,7 @@ namespace codesetTest
         /// </para>
         /// </summary>
         [TestMethod]
-        public void InstructionLinesTest()
+        public void ConstructorInstructionLinesTest()
         {
             var lines = new List<string>
             {
