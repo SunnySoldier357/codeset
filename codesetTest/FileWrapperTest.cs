@@ -204,6 +204,40 @@ namespace codesetTest
             }
         }
 
+        [TestMethod]
+        public void ReadSettingsNullTest()
+        {
+            Dictionary<string, List<Setting>> result = null;
+
+            try
+            {
+                result = FileWrapper.ReadSettings(null);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public void ReadSettingsEmptyTest()
+        {
+            Dictionary<string, List<Setting>> result = null;
+
+            try
+            {
+                result = FileWrapper.ReadSettings("");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+
+            Assert.IsNull(result);
+        }
+
         //* Private Methods
 
         /// <summary>

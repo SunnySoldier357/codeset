@@ -67,9 +67,9 @@ namespace codeset.Models
             return result;
         }
 
-        public static string ReadSettings(string settingFilePath)
+        public static Dictionary<string, List<Setting>> ReadSettings(string settingFilePath)
         {
-            var result = "";
+            var result = new Dictionary<string, List<Setting>>();
 
             try
             {
@@ -80,7 +80,7 @@ namespace codeset.Models
             }
             catch (Exception)
             {
-                throw;
+                result = null;
             }
 
             return result;
