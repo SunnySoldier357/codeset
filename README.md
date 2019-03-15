@@ -1,5 +1,7 @@
 # codeset
 
+[![Build Status](https://travis-ci.com/SunnySoldier357/codeset.svg?branch=master)](https://travis-ci.com/SunnySoldier357/codeset)
+
 **codeset** is a command line tool to simplify maintaining all of
 VSCode's settings and extensions over several computers. It uses a
 single JSON config file in order to store all of this information.
