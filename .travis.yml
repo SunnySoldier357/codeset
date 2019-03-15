@@ -1,6 +1,9 @@
 language: csharp
+os:
+  - linux
+  - osx
 mono: none
-dotnet: 2.2.102
+dotnet: 2.1.502
 solution: codeset.sln
 script:
   - dotnet restore
