@@ -54,7 +54,7 @@ namespace codeset.Models
                 return false;
         }
 
-        public void InstallAllExtensions(string path)
+        public bool InstallAllExtensions(string path)
         {
             var extensions = FileWrapper.ReadExtensions(path);
 
@@ -76,6 +76,8 @@ namespace codeset.Models
 
             Console.WriteLine("\nSuccessfully installed {0} extension{1}!", total,
                 total == 1 ? "" : "s");
+
+            return true;
         }
     }
 }
