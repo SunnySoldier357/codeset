@@ -30,9 +30,38 @@ wants to keep on the local computer. Also have a consistent manner to indicate
 different values for different OS and even mention if a particular setting is
 only meant for a specific OS
  
-## Examples
+## Sample config file (codeset.config.json)
 
-TODO: Provide examples
+The application looks for a JSON configuration file in the
+following locations: `$HOME/.config/codeset.config.json`
+or `$HOME\.config\codeset.config.json`.
+
+```json
+{
+    "extensions": {
+        "Required": [
+            "aaron-bond.better-comments"
+        ]
+    },
+    "settings": {
+        "editor.fontFamily": "Fira Code"
+    },
+}
+```
+
+Or instead of nesting the files into the config file
+itself, separate files can be created for settings &
+extensions and the full paths can be linked to the main
+`codeset.config.json`.
+
+
+```json
+{
+    "extensions": "path to extensions.txt",
+    "settings": "path to settings.json",
+}
+```
+
 
 ## Dependencies
 
