@@ -1,2 +1,0 @@
-TODO
-        - Generate config files from current extensions and settings
