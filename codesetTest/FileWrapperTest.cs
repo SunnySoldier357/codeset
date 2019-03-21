@@ -88,17 +88,19 @@ namespace codesetTest
 
             var lines = new string[]
             {
-                "",
-                "Required",
-                "        - item 1",
-                "        - item 2",
-                "",
-                "C#",
-                "        - item 3",
-                "        - item 4"
+                "{",
+                "    \"Required\": [",
+                "        \"item 1\",",
+                "        \"item 2\",",
+                "    ],",
+                "    \"C#\": [",
+                "        \"item 3\",",
+                "        \"item 4\",",
+                "    ],",
+                "}"
             };
 
-            string path = CreateFile(fileName, "txt", lines);
+            string path = CreateFile(fileName, "json", lines);
 
             try
             {
@@ -130,7 +132,7 @@ namespace codesetTest
             }
             finally
             {
-                DeleteFile(fileName, "txt");
+                DeleteFile(fileName, "json");
             }
         }
 
@@ -157,16 +159,19 @@ namespace codesetTest
             {
                 "",
                 "",
-                "    Required",
-                "     -    item 1",
-                "             -     item 2",
-                "",
-                "  C#",
-                "- item 3",
-                "             - item 4"
+                " {",
+                "       \"Required\": [",
+                "           \"item 1\",",
+                "                  \"item 2\",",
+                "   ],",
+                " \"C#\": [",
+                "  \"item 3\",",
+                "                \"item 4\",",
+                "                     ],",
+                "}"
             };
 
-            string path = CreateFile(fileName, "txt", lines);
+            string path = CreateFile(fileName, "json", lines);
 
             try
             {
@@ -198,7 +203,7 @@ namespace codesetTest
             }
             finally
             {
-                DeleteFile(fileName, "txt");
+                DeleteFile(fileName, "json");
             }
         }
 
