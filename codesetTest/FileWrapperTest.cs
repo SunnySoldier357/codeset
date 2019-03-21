@@ -2,10 +2,8 @@ using codeset.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
+
+using static codesetTest.Utility;
 
 namespace codesetTest
 {
@@ -100,7 +98,7 @@ namespace codesetTest
                 "        - item 4"
             };
 
-            string path = createFile(fileName, lines);
+            string path = CreateFile(fileName, "txt", lines);
 
             try
             {
@@ -132,7 +130,7 @@ namespace codesetTest
             }
             finally
             {
-                deleteFile(fileName);
+                DeleteFile(fileName, "txt");
             }
         }
 
@@ -168,7 +166,7 @@ namespace codesetTest
                 "             - item 4"
             };
 
-            string path = createFile(fileName, lines);
+            string path = CreateFile(fileName, "txt", lines);
 
             try
             {
@@ -200,7 +198,7 @@ namespace codesetTest
             }
             finally
             {
-                deleteFile(fileName);
+                DeleteFile(fileName, "txt");
             }
         }
 
@@ -236,76 +234,6 @@ namespace codesetTest
             }
 
             Assert.IsNull(result);
-        }
-
-        //* Private Methods
-
-        /// <summary>
-        /// Creates a file with the specified name and contents in a automatically
-        /// created Test folder (deep in Debug folder).
-        /// </summary>
-        /// <param name="fileName">The name of the tct file to be created.</param>
-        /// <param name="fileContents">The lines of the txt file.</param>
-        /// <returns>
-        /// Returns a string that represents the full path to the created file.
-        /// </returns>
-        private string createFile(string fileName, string[] fileContents)
-        {
-            string path = Directory.GetCurrentDirectory();
-            DirectoryInfo dir = new DirectoryInfo(path);
-
-            dir.CreateSubdirectory("Test");
-
-            var directories = dir.GetDirectories();
-            DirectoryInfo testDir = directories.FirstOrDefault(d => d.Name == "Test");
-
-            // Make sure of '/' vs '\'
-            OSPlatform os = Utility.GetCurrentOS();
-            string divider = "/";
-            if (os.Equals(OSPlatform.Windows))
-                divider = "\\";
-
-            string filePath = string.Format(
-                "{0}{1}{2}.txt", testDir.FullName, divider, fileName);
-
-            FileStream stream = File.Create(filePath);
-
-            using (stream)
-            {
-                var encoder = new UTF8Encoding(true);
-
-                foreach (string line in fileContents)
-                {
-                    byte[] lineBytes = encoder.GetBytes(line + "\n");
-                    stream.Write(lineBytes, 0, lineBytes.Length);
-                }
-            }
-
-            return filePath;
-        }
-
-        /// <summary>
-        /// Deletes the txt file specified from the automatically created Test
-        /// folder (deep in Debug folder).
-        /// </summary>
-        /// <param name="fileName">The name of the txt file to be deleted.</param>
-        private void deleteFile(string fileName)
-        {
-            string path = Directory.GetCurrentDirectory();
-            DirectoryInfo dir = new DirectoryInfo(path);
-
-            OSPlatform os = Utility.GetCurrentOS();
-            string divider = "/";
-            if (os.Equals(OSPlatform.Windows))
-                divider = "\\";
-
-            var directories = dir.GetDirectories();
-            var testDir = directories.FirstOrDefault(d => d.Name == "Test");
-
-            File.Delete(string.Format("{0}{1}{2}.txt",
-                testDir.FullName, divider, fileName));
-
-            testDir.Delete();
         }
     }
 }

@@ -116,7 +116,7 @@ namespace codesetTest
                 "\"key\": \"Windows:windows;OSX:osx;Linux:manjaro\","
             };
 
-            OSPlatform os = Utility.GetCurrentOS();
+            OSPlatform os = Utility.CurrentOS;
 
             string value = "windows";
 
