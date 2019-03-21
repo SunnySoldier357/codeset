@@ -30,11 +30,11 @@ wants to keep on the local computer. Also have a consistent manner to indicate
 different values for different OS and even mention if a particular setting is
 only meant for a specific OS
  
-## Sample config file (codeset.config.json)
+## Sample config file (config.json)
 
 The application looks for a JSON configuration file in the
-following locations: `$HOME/.config/codeset.config.json`
-or `$HOME\.config\codeset.config.json`.
+following locations: `$HOME/.config/codeset/config.json`
+or `$HOME\.config\codeset\config.json`.
 
 ```json
 {
@@ -57,7 +57,7 @@ extensions and the full paths can be linked to the main
 
 ```json
 {
-    "extensions": "path to extensions.txt",
+    "extensions": "path to extensions.json",
     "settings": "path to settings.json",
 }
 ```
