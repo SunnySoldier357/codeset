@@ -207,6 +207,17 @@ namespace codesetTest
             }
         }
 
+        /// <summary>
+        /// <para>
+        /// Tests if the ReadSettings() method can correctly handle null path.
+        /// </para>
+        /// <para>
+        /// Input: null for path
+        /// </para>
+        /// <para>
+        /// Expected Output: null
+        /// </para>
+        /// </summary>
         [TestMethod]
         public void ReadSettingsNullTest()
         {
@@ -224,6 +235,17 @@ namespace codesetTest
             Assert.IsNull(result);
         }
 
+        /// <summary>
+        /// <para>
+        /// Tests if the ReadSettings() method can correctly handle empty path.
+        /// </para>
+        /// <para>
+        /// Input: "" for path
+        /// </para>
+        /// <para>
+        /// Expected Output: null
+        /// </para>
+        /// </summary>
         [TestMethod]
         public void ReadSettingsEmptyTest()
         {
