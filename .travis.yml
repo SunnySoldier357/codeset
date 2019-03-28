@@ -3,8 +3,9 @@ os:
   - linux
   - osx
   - windows
+dist: xenial
 mono: none
-dotnet: 2.2.102
+dotnet: 2.2
 solution: codeset.sln
 script:
   - dotnet restore
