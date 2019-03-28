@@ -1,5 +1,6 @@
 using codeset.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -172,17 +173,24 @@ namespace codesetTest
         private void createAndTestSetting(List<string> lines, string instruction,
             string key, string value)
         {
-            Setting setting = new Setting(lines);
+            try
+            {
+                Setting setting = new Setting(lines);
 
-            Assert.IsTrue(setting.Instruction == instruction,
-                string.Format("Instruction - Expected Output: {0} vs Output: {1}",
-                    instruction, setting.Instruction));
-            Assert.IsTrue(setting.Key == key,
-                string.Format("Key - Expected Output: {0} vs Output: {1}",
-                    key, setting.Key));
-            Assert.IsTrue(setting.Value == value,
-                string.Format("Value - Expected Output: {0} vs Output: {1}",
-                    value, setting.Value));
+                Assert.IsTrue(setting.Instruction == instruction,
+                    string.Format("Instruction - Expected Output: {0} vs Output: {1}",
+                        instruction, setting.Instruction));
+                Assert.IsTrue(setting.Key == key,
+                    string.Format("Key - Expected Output: {0} vs Output: {1}",
+                        key, setting.Key));
+                Assert.IsTrue(setting.Value == value,
+                    string.Format("Value - Expected Output: {0} vs Output: {1}",
+                        value, setting.Value));
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
         }
     }
 }
