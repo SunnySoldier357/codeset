@@ -5,7 +5,7 @@ os:
   - windows
 dist: xenial
 mono: none
-dotnet: 2.2
+dotnet: 2.2.102
 solution: codeset.sln
 script:
   - dotnet restore
