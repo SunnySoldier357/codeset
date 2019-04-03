@@ -1,7 +1,5 @@
 # codeset
 
-[![Build Status](https://travis-ci.com/SunnySoldier357/codeset.svg?branch=master)](https://travis-ci.com/SunnySoldier357/codeset)
-
 **codeset** is a command line tool to simplify maintaining all of
 VSCode's settings and extensions over several computers. It uses a
 single JSON config file in order to store all of this information.
@@ -11,7 +9,7 @@ single JSON config file in order to store all of this information.
 **codeset -u** : Updates VSCode based on configurations
 
 **codeset config list**: Lists the configuration in a meaningful manner
-(default is both --ext or --settings for individual)
+(default is both, --ext or --settings for individual)
 
 **codeset config add**: Adds a configuration
 
@@ -24,11 +22,6 @@ single JSON config file in order to store all of this information.
 **codeset cloud fetch**
 
 **codeset cloud pull**
-
-Ensure that in the config.json, a list of categories is stored that the user
-wants to keep on the local computer. Also have a consistent manner to indicate
-different values for different OS and even mention if a particular setting is
-only meant for a specific OS
  
 ## Sample config file (config.json)
 
@@ -62,6 +55,53 @@ extensions and the full paths can be linked to the main
 }
 ```
 
+For each setting in the settings portion of the configuration, it must follow
+this convention:
+
+```json
+{
+    "key": "",
+    "value": {
+        "windows": "",
+        "osx": "",
+        "linux": ""
+    },
+    "instruction": ""
+}
+```
+
+A few examples are show below...
+
+1. Different values for different Operating Systems
+
+If on Linux, the value of the setting will be false and vice versa for Windows.
+
+```json
+{
+    "key": "path-autocomplete.useBackslash",
+    "value": {
+        "windows": true,
+        "linux": false
+    }
+}
+```
+
+2. Providing instruction to prompt the user to fill in.
+
+In this case, any value provided will be considered the default value but the
+user will still be prompted. This only occurs if the operating system is listed
+in the value section.
+
+```json
+{
+    "key": "java.format.settings.url",
+    "value": {
+        "windows": "",
+        "linux": ""
+    },
+    "instruction": "File location for Java Formatter (formatter.xml)"
+}
+```
 
 ## Dependencies
 

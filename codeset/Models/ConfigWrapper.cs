@@ -40,7 +40,6 @@ namespace codeset.Models
                     Extensions = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
                 }
             }
-
         }
     }
 }
