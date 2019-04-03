@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using codeset.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -10,55 +11,67 @@ namespace codesetTest
         [TestMethod]
         public void InstallExtensionNullTest()
         {
-            bool result = false;
+            bool caughtException = false;
             CodeWrapper code = new CodeWrapper();
 
             try
             {
-                result = code.InstallExtension(null);
+                code.InstallExtension(null);
+            }
+            catch (ArgumentNullException)
+            {
+                caughtException = true;
             }
             catch (Exception e)
             {
                 Assert.Fail(e.Message);
             }
 
-            Assert.IsFalse(result);
+            Assert.IsTrue(caughtException);
         }
 
         [TestMethod]
         public void InstallExtensionEmptyTest()
         {
-            bool result = false;
+            bool caughtException = false;
             CodeWrapper code = new CodeWrapper();
 
             try
             {
-                result = code.InstallExtension("");
+                code.InstallExtension("");
+            }
+            catch (FileNotFoundException)
+            {
+                caughtException = true;
             }
             catch (Exception e)
             {
                 Assert.Fail(e.Message);
             }
 
-            Assert.IsFalse(result);
+            Assert.IsTrue(caughtException);
         }
 
         [TestMethod]
         public void InstallAllExtensionsNullTest()
         {
-            bool result = false;
+            bool caughtException = false;
             CodeWrapper code = new CodeWrapper();
 
             try
             {
-                result = code.InstallAllExtensions(null);
+                code.InstallAllExtensions(null);
+            }
+            catch (ArgumentNullException)
+            {
+                caughtException = true;
             }
             catch (Exception e)
             {
                 Assert.Fail(e.Message);
             }
 
-            Assert.IsFalse(result);
+            Assert.IsFalse(caughtException);
         }
 
         [TestMethod]
