@@ -19,12 +19,29 @@ namespace codesetTest
         /// Input: null for lines
         /// </para>
         /// <para>
-        /// Expected Output: null for all properties of Setting
+        /// Expected Output: ArgumentNullException thrown
         /// </para>
         /// </summary>
         [TestMethod]
-        public void ConstructorNullLinesTest() =>
-            createAndTestSetting(null, null, null, null);
+        public void ConstructorNullLinesTest()
+        {
+            bool caughtException = false;
+
+            try
+            {
+                Setting setting = new Setting(null);
+            }
+            catch (ArgumentNullException)
+            {
+                caughtException = true;
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+
+            Assert.IsTrue(caughtException);
+        }
 
         /// <summary>
         /// <para>
@@ -34,12 +51,29 @@ namespace codesetTest
         /// Input: empty List for lines
         /// </para>
         /// <para>
-        /// Expected Output: null for all properties of Setting
+        /// Expected Output: ArgumentException thrown
         /// </para>
         /// </summary>
         [TestMethod]
-        public void ConstructorEmptyLinesTest() =>
-            createAndTestSetting(new List<string>(), null, null, null);
+        public void ConstructorEmptyLinesTest()
+        {
+            bool caughtException = false;
+
+            try
+            {
+                Setting setting = new Setting(null);
+            }
+            catch (ArgumentException)
+            {
+                caughtException = true;
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+
+            Assert.IsTrue(caughtException);
+        }
 
         /// <summary>
         /// <para>
