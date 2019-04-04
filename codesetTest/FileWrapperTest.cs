@@ -2,7 +2,7 @@ using codeset.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-
+using System.IO;
 using static codesetTest.Utility;
 
 namespace codesetTest
@@ -20,24 +20,28 @@ namespace codesetTest
         /// Input: null for path
         /// </para>
         /// <para>
-        /// Expected Output: null
+        /// Expected Output: ArgumentNullException thrown
         /// </para>
         /// </summary>
         [TestMethod]
         public void ReadExtensionsNullTest()
         {
-            Dictionary<string, List<string>> result = null;
+            bool caughtException = false;
 
             try
             {
-                result = FileWrapper.ReadExtensions(null);
+                FileWrapper.ReadExtensions(null);
+            }
+            catch (ArgumentNullException)
+            {
+                caughtException = true;
             }
             catch (Exception e)
             {
                 Assert.Fail(e.Message);
             }
 
-            Assert.IsNull(result);
+            Assert.IsTrue(caughtException);
         }
 
         /// <summary>
@@ -48,24 +52,28 @@ namespace codesetTest
         /// Input: "" for path
         /// </para>
         /// <para>
-        /// Expected Output: null
+        /// Expected Output: IOException thrown
         /// </para>
         /// </summary>
         [TestMethod]
         public void ReadExtensionsEmptyTest()
         {
-            Dictionary<string, List<string>> result = null;
+            bool caughtException = false;
 
             try
             {
-                result = FileWrapper.ReadExtensions("");
+                FileWrapper.ReadExtensions("");
+            }
+            catch (IOException)
+            {
+                caughtException = true;
             }
             catch (Exception e)
             {
                 Assert.Fail(e.Message);
             }
 
-            Assert.IsNull(result);
+            Assert.IsTrue(caughtException);
         }
 
         /// <summary>
@@ -215,24 +223,28 @@ namespace codesetTest
         /// Input: null for path
         /// </para>
         /// <para>
-        /// Expected Output: null
+        /// Expected Output: ArgumentNullException thrown
         /// </para>
         /// </summary>
         [TestMethod]
         public void ReadSettingsNullTest()
         {
-            Dictionary<string, List<Setting>> result = null;
+            bool caughtException = false;
 
             try
             {
-                result = FileWrapper.ReadSettings(null);
+                FileWrapper.ReadSettings(null);
+            }
+            catch (ArgumentNullException)
+            {
+                caughtException = true;
             }
             catch (Exception e)
             {
                 Assert.Fail(e.Message);
             }
 
-            Assert.IsNull(result);
+            Assert.IsTrue(caughtException);
         }
 
         /// <summary>
@@ -243,24 +255,28 @@ namespace codesetTest
         /// Input: "" for path
         /// </para>
         /// <para>
-        /// Expected Output: null
+        /// Expected Output: IOException thrown
         /// </para>
         /// </summary>
         [TestMethod]
         public void ReadSettingsEmptyTest()
         {
-            Dictionary<string, List<Setting>> result = null;
+            bool caughtException = false;
 
             try
             {
-                result = FileWrapper.ReadSettings("");
+                FileWrapper.ReadSettings("");
+            }
+            catch (IOException)
+            {
+                caughtException = true;
             }
             catch (Exception e)
             {
                 Assert.Fail(e.Message);
             }
 
-            Assert.IsNull(result);
+            Assert.IsTrue(caughtException);
         }
     }
 }
