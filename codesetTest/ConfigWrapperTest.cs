@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using codeset.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -11,13 +12,12 @@ namespace codesetTest
         public void ConstructorEmptyTest()
         {
             bool caughtException = false;
-            ConfigWrapper wrapper = null;
 
             try
             {
-                wrapper = new ConfigWrapper("");
+                ConfigWrapper wrapper = new ConfigWrapper("");
             }
-            catch (ArgumentException)
+            catch (IOException)
             {
                 caughtException = true;
             }

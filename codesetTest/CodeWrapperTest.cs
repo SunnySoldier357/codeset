@@ -40,7 +40,7 @@ namespace codesetTest
             {
                 code.InstallExtension("");
             }
-            catch (FileNotFoundException)
+            catch (IOException)
             {
                 caughtException = true;
             }
