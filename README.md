@@ -103,4 +103,4 @@ in the value section.
 ## Dependencies
 
 - https://github.com/commandlineparser/commandline/wiki
-- https://github.com/gsscoder/commandline
+- https://www.newtonsoft.com/json/help/html/Introduction.htm
