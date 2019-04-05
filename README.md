@@ -61,11 +61,7 @@ this convention:
 ```json
 {
     "key": "",
-    "value": {
-        "windows": "",
-        "osx": "",
-        "linux": ""
-    },
+    "value": "",
     "instruction": ""
 }
 ```
@@ -74,14 +70,15 @@ A few examples are show below...
 
 1. Different values for different Operating Systems
 
-If on Linux, the value of the setting will be false and vice versa for Windows.
+If on Linux or OSX, the value of the setting will be false and vice versa for Windows.
 
 ```json
 {
     "key": "path-autocomplete.useBackslash",
     "value": {
         "windows": true,
-        "linux": false
+        "linux": false,
+        "osx": false
     }
 }
 ```
