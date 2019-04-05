@@ -1,8 +1,9 @@
-using codeset.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using System.Runtime.InteropServices;
+using System;
+
+using codeset.Models;
 
 namespace codesetTest
 {
@@ -81,21 +82,27 @@ namespace codesetTest
         /// pair value provided.
         /// </para>
         /// <para>
-        /// Input: "key": "value"
+        /// Input:
+        /// {
+        ///     "key": "testKey",
+        ///     "value": "testValue"
+        /// }
         /// </para>
         /// <para>
-        /// Expected Output: Key: "key", Value: "value", Instruction: null
+        /// Expected Output: Key: "testKey", Value: "testValue", Instruction: null
         /// </para>
         /// </summary>
         [TestMethod]
         public void ConstructorSimpleLinesTest()
         {
-            var lines = new List<string>
+            JObject setting = JObject.FromObject(new
             {
-                "\"key\": \"value\","
-            };
+                key = "testKey",
+                value = "testValue"
+            });
 
-            createAndTestSetting(lines, null, "\"key\"", "\"value\"");
+            createAndTestSetting(setting, "testKey",
+                JToken.FromObject("testValue"), null);
         }
 
         /// <summary>
@@ -104,30 +111,36 @@ namespace codesetTest
         /// key-value pair value provided.
         /// </para>
         /// <para>
-        /// Input: "key": [item1, item2] (over multiple lines)
+        /// Input:
+        /// {
+        ///     "key": "testKey",
+        ///     "value": [
+        ///         "item1",
+        ///         "item2"
+        ///     ]
+        /// }
         /// </para>
         /// <para>
-        /// Expected Output: Key: "key", Value: "[\n    item1\n    item2\n]",
-        /// Instruction: null
+        /// Expected Output: Key: "testKey", Value: JArray with 2 items (item1
+        /// and item2), Instruction: null
         /// </para>
         /// </summary>
         [TestMethod]
         public void ConstructorMultiLinesTest()
         {
-            var lines = new List<string>
+            JArray value = new JArray(new string[]
             {
-                "\"key\": [",
-                "    \"item1\"",
-                "    \"item2\"",
-                "],"
-            };
+                "item1",
+                "item2"
+            });
 
-            string value = "[";
-            value += "\n    \"item1\"";
-            value += "\n    \"item2\"";
-            value += "\n]";
+            JObject setting = JObject.FromObject(new
+            {
+                key = "testKey",
+                value = value
+            });
 
-            createAndTestSetting(lines, null, "\"key\"", value);
+            createAndTestSetting(setting, "testKey", value, null);
         }
 
         /// <summary>
@@ -136,32 +149,44 @@ namespace codesetTest
         /// pair value provided and return the correct value for the current OS.
         /// </para>
         /// <para>
-        /// Input: "key": "Windows:windows;OSX:osx;Linux:manjaro"
+        /// Input:
+        /// {
+        ///     "key": "testKey",
+        ///     "value": {
+        ///         "windows": "windows",
+        ///         "osx": "osx",
+        ///         "linux": "manjaro"
+        ///     }
+        /// }
         /// </para>
         /// <para>
-        /// Expected Output: Key: "key", Value (Windows): "windows", Value (OSX):
+        /// Expected Output: Key: "testKey", Value (Windows): "windows", Value (OSX):
         /// "osx", Value (Linux): "manjaro", Instruction: null
         /// </para>
         /// </summary>
         [TestMethod]
         public void ConstructorOSLinesTest()
         {
-            var lines = new List<string>
+            JObject setting = JObject.FromObject(new
             {
-                "\"key\": \"Windows:windows;OSX:osx;Linux:manjaro\","
-            };
-
-            OSPlatform os = Utility.CurrentOS;
+                key = "testKey",
+                value = new
+                {
+                    windows = "windows",
+                    osx = "osx",
+                    linux = "manjaro"
+                }
+            });
 
             string value = "windows";
 
-            if (os.Equals(OSPlatform.Linux))
+            if (Utility.CurrentOS.Equals(OSPlatform.Linux))
                 value = "manjaro";
-            else if (os.Equals(OSPlatform.OSX))
+            else if (Utility.CurrentOS.Equals(OSPlatform.OSX))
                 value = "osx";
 
-            createAndTestSetting(lines, null, "\"key\"",
-                string.Format("\"{0}\"", value));
+            createAndTestSetting(setting, "testKey", JToken.FromObject(value),
+                null);
         }
 
         /// <summary>
@@ -170,24 +195,28 @@ namespace codesetTest
         /// pair value provided and return the instruction.
         /// </para>
         /// <para>
-        /// Input: // TODO: Path to bash executable
-        /// "\"key\": \"value\","
+        /// Input:
+        /// {
+        ///     "key": "testKey",
+        ///     "value": "testValue",
+        ///     "instruction": "testInstruction"
+        /// }
         /// </para>
         /// <para>
-        /// Expected Output: Key: "key", Value: null,
-        /// Instruction: "Path to bash executable"
+        /// Expected Output: Key: "testKey", Value: null, Instruction: "testInstruction"
         /// </para>
         /// </summary>
         [TestMethod]
         public void ConstructorInstructionLinesTest()
         {
-            var lines = new List<string>
+            JObject setting = JObject.FromObject(new
             {
-                "// TODO: Path to bash executable",
-                "\"key\": \"value\","
-            };
+                key = "testKey",
+                value = "testValue",
+                instruction = "testInstruction"
+            });
 
-            createAndTestSetting(lines, "Path to bash executable", "\"key\"", null);
+            createAndTestSetting(setting, "testKey", null, "testInstruction");
         }
 
         //* Private Methods
@@ -196,20 +225,20 @@ namespace codesetTest
         /// Creates a Setting instance based on parameter and tests it to the
         /// provided values to ensure they are the same.
         /// </summary>
-        /// <param name="lines">
-        /// The lines representing the setting from settings.json
-        /// </param>
-        /// <param name="instruction">
-        /// The right value for Setting's Instruction property.
+        /// <param name="json">
+        /// The JSON object representing the setting from settings.json
         /// </param>
         /// <param name="key">The right value for Setting's Key property.</param>
         /// <param name="value">The right value for Setting's Value property.</param>
-        private void createAndTestSetting(List<string> lines, string instruction,
-            string key, string value)
+        /// <param name="instruction">
+        /// The right value for Setting's Instruction property.
+        /// </param>
+        private void createAndTestSetting(JObject json, string key, JToken value,
+            string instruction)
         {
             try
             {
-                Setting setting = new Setting(lines);
+                Setting setting = new Setting(json);
 
                 Assert.IsTrue(setting.Instruction == instruction,
                     string.Format("Instruction - Expected Output: {0} vs Output: {1}",
@@ -217,9 +246,9 @@ namespace codesetTest
                 Assert.IsTrue(setting.Key == key,
                     string.Format("Key - Expected Output: {0} vs Output: {1}",
                         key, setting.Key));
-                Assert.IsTrue(setting.Value == value,
+                Assert.IsTrue(setting.Value.ToString() == value.ToString(),
                     string.Format("Value - Expected Output: {0} vs Output: {1}",
-                        value, setting.Value));
+                        value.ToString(), setting.Value.ToString()));
             }
             catch (Exception e)
             {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json.Linq;
 
 namespace codeset.Models
 {
@@ -8,10 +9,10 @@ namespace codeset.Models
         //* Public Properties
         public string Instruction { get; }
         public string Key { get; }
-        public string Value { get; set; }
+        public JObject Value { get; set; }
 
         //* Constructors
-        public Setting(List<string> lines)
+        public Setting(JObject setting)
         {
             if (lines != null && lines.Count >= 1)
             {
