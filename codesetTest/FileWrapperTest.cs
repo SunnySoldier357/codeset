@@ -1,8 +1,9 @@
-using codeset.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.IO;
+
+using codeset.Models;
 using static codesetTest.Utility;
 
 namespace codesetTest
@@ -82,7 +83,17 @@ namespace codesetTest
         /// correctly turn file at the path into a Dictionary.
         /// </para>
         /// <para>
-        /// Input: Auto-generated file formatted nicely
+        /// Input:
+        /// {
+        ///     "Required": [
+        ///         "item 1",
+        ///         "item 2"
+        ///     ],
+        ///     "C#": [
+        ///         "item 3",
+        ///         "item 4"
+        ///     ]
+        /// }
         /// </para>
         /// <para>
         /// Expected Output: Required and C# as keys and items 1-4 as values in
@@ -94,92 +105,23 @@ namespace codesetTest
         {
             string fileName = "ReadExtensionsAlgorithmTest";
 
-            var lines = new string[]
+            JObject lines = JObject.FromObject(new
             {
-                "{",
-                "    \"Required\": [",
-                "        \"item 1\",",
-                "        \"item 2\",",
-                "    ],",
-                "    \"C#\": [",
-                "        \"item 3\",",
-                "        \"item 4\",",
-                "    ],",
-                "}"
-            };
-
-            string path = CreateFile(fileName, "json", lines);
-
-            try
-            {
-                var result = FileWrapper.ReadExtensions(path);
-
-                if (result.ContainsKey("Required"))
+                Required = new string[]
                 {
-                    var list = result["Required"];
-
-                    Assert.IsTrue(list[0] == "item 1");
-                    Assert.IsTrue(list[1] == "item 2");
+                    "item 1",
+                    "item 2"
                 }
-                else
-                    Assert.Fail("No Key found for 'Required'");
+            });
 
-                if (result.ContainsKey("C#"))
-                {
-                    var list = result["C#"];
-
-                    Assert.IsTrue(list[0] == "item 3");
-                    Assert.IsTrue(list[1] == "item 4");
-                }
-                else
-                    Assert.Fail("No Key found for 'C#'");
-            }
-            catch (Exception e)
+            lines.Add(new JProperty("C#", new string[]
             {
-                Assert.Fail(e.Message);
-            }
-            finally
-            {
-                DeleteFile(fileName, "json");
-            }
-        }
+                "item 3",
+                "item 4"
+            }));
 
-        /// <summary>
-        /// <para>
-        /// Tests the algorithm of the ReadExtensions() method to ensure it can
-        /// correctly turn the file at the path into a Dictionary.
-        /// </para>
-        /// <para>
-        /// Input: Auto-generated file formatted randomly but using the correct
-        /// conventions
-        /// </para>
-        /// <para>
-        /// Expected Output: Required and C# as keys and items 1-4 as values in
-        /// lists to their respective key
-        /// </para>
-        /// </summary>
-        [TestMethod]
-        public void ReadExtensionsComplexAlgorithmTest()
-        {
-            string fileName = "ReadExtensionsComplexAlgorithmTest";
-
-            var lines = new string[]
-            {
-                "",
-                "",
-                " {",
-                "       \"Required\": [",
-                "           \"item 1\",",
-                "                  \"item 2\",",
-                "   ],",
-                " \"C#\": [",
-                "  \"item 3\",",
-                "                \"item 4\",",
-                "                     ],",
-                "}"
-            };
-
-            string path = CreateFile(fileName, "json", lines);
+            string path = CreateFile(fileName, "json",
+                lines.ToString().Split('\n'));
 
             try
             {
@@ -278,5 +220,7 @@ namespace codesetTest
 
             Assert.IsTrue(caughtException);
         }
+
+        // TODO: Add unit tests to test the ReadSettings() algorithm
     }
 }

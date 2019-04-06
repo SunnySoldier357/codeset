@@ -1,13 +1,25 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
+
 using codeset.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace codesetTest
 {
     [TestClass]
     public class ConfigWrapperTest
     {
+        /// <summary>
+        /// <para>
+        /// Tests if the Constructor method can correctly handle empty path.
+        /// </para>
+        /// <para>
+        /// Input: "" for path
+        /// </para>
+        /// <para>
+        /// Expected Output: IOException thrown
+        /// </para>
+        /// </summary>
         [TestMethod]
         public void ConstructorEmptyTest()
         {
@@ -28,5 +40,9 @@ namespace codesetTest
 
             Assert.IsTrue(caughtException);
         }
+
+        // TODO: Add a unit test to test Constructor's algorithm
+        //     1) Everything in 1 file
+        //     2) Both settings and extensions in another file
     }
 }
