@@ -5,7 +5,7 @@ namespace codeset.Models
         //* Public Methods
         public int HandleCommand(Options options, ConfigWrapper wrapper)
         {
-            if (options.ExtensionFile == true)
+            if (options.ExtensionFile)
             {
                 CodeWrapper code = new CodeWrapper();
                 code.InstallAllExtensions(wrapper);
