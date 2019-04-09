@@ -6,22 +6,8 @@ single JSON config file in order to store all of this information.
 
 ## codeset's functions
 
-**codeset -u** : Updates VSCode based on configurations
-
-**codeset config list**: Lists the configuration in a meaningful manner
-(default is both, --ext or --settings for individual)
-
-**codeset config add**: Adds a configuration
-
-**codeset config remove**: Removes a configuration
-
-**codeset config init**: Creates a template codeset.json file at ~/.config/
-
-**codeset cloud status**: Check status of cloud config and local config
-
-**codeset cloud fetch**
-
-**codeset cloud pull**
+**codeset --install-extensions** : Installs VS Code extensions based on those
+specified in the config file ([see below](https://github.com/SunnySoldier357/codeset#sample-config-file-configjson))
  
 ## Sample config file (config.json)
 
