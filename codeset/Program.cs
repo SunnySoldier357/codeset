@@ -1,5 +1,6 @@
-﻿using codeset.Models;
-using CommandLine;
+﻿using CommandLine;
+
+using codeset.Models;
 
 namespace codeset
 {
@@ -8,10 +9,11 @@ namespace codeset
         static void Main(string[] args)
         {
             CommandHandler cmdHandler = new CommandHandler();
+            ConfigWrapper wrapper = new ConfigWrapper();
 
             var parsed = Parser.Default
                 .ParseArguments<Options>(args)
-                .WithParsed(options => cmdHandler.HandleCommand(options));
+                .WithParsed(options => cmdHandler.HandleCommand(options, wrapper));
         }
     }
 }

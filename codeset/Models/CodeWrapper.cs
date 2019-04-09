@@ -54,9 +54,9 @@ namespace codeset.Models
                 return false;
         }
 
-        public bool InstallAllExtensions(string path)
+        public bool InstallAllExtensions(ConfigWrapper wrapper)
         {
-            var extensions = FileWrapper.ReadExtensions(path);
+            var extensions = wrapper.Extensions;
 
             int i = 1;
             int total = extensions.Sum(e => e.Value.Count);

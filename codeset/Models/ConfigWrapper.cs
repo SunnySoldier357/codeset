@@ -1,6 +1,7 @@
-using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.IO;
 
 namespace codeset.Models
 {
@@ -9,9 +10,9 @@ namespace codeset.Models
         //* Private Static Properties
         private static string configPath = "/home/sandeepsingh/.config/codeset/config.json";
 
-        //* Private Properties
-        public JObject Extensions { get; private set; }
-        public JObject Settings { get; private set; }
+        //* Public Properties
+        public Dictionary<string, List<string>> Extensions { get; private set; }
+        public Dictionary<string, List<Setting>> Settings { get; private set; }
 
         //* Constructor
         public ConfigWrapper(string path = null)
@@ -21,6 +22,7 @@ namespace codeset.Models
                 path = configPath;
 
             JToken configJson = null;
+            JObject extensions = null;
 
             using (StreamReader stream = new StreamReader(
                 new FileStream(configPath, FileMode.Open)))
@@ -30,16 +32,38 @@ namespace codeset.Models
             }
 
             if (configJson is JObject)
-                Extensions = (JObject) configJson;
+                extensions = (JObject) configJson;
             else
             {
                 // Get the JSON file at that path and set extensions to that
                 using (StreamReader stream = new StreamReader(
                     new FileStream(configJson.ToString(), FileMode.Open)))
                 {
-                    Extensions = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
+                    extensions = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
                 }
             }
+
+            Extensions = convertExtensionsToDic(extensions);
+        }
+
+        //* Private Methods
+        private Dictionary<string, List<string>> convertExtensionsToDic(JObject extensions)
+        {
+            var dictionary = new Dictionary<string, List<string>>();
+
+            var properties = extensions.Properties();
+
+            foreach (JProperty property in properties)
+            {
+                var values = new List<string>();
+
+                foreach (var value in (JArray) property.Value)
+                    values.Add(value.ToString());
+
+                dictionary[property.Name] = values;
+            }
+
+            return dictionary;
         }
     }
 }

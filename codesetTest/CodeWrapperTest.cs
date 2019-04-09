@@ -1,6 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.IO;
 
 using codeset.Models;
 
@@ -9,6 +8,8 @@ namespace codesetTest
     [TestClass]
     public class CodeWrapperTest
     {
+        //* Test Methods
+
         /// <summary>
         /// <para>
         /// Tests if the InstallExtension() method can correctly handle null
@@ -109,39 +110,6 @@ namespace codesetTest
             }
 
             Assert.IsFalse(caughtException);
-        }
-
-        /// <summary>
-        /// <para>
-        /// Tests if the InstallExtension() method can correctly handle empty path.
-        /// </para>
-        /// <para>
-        /// Input: "" for path
-        /// </para>
-        /// <para>
-        /// Expected Output: IOException thrown
-        /// </para>
-        /// </summary>
-        [TestMethod]
-        public void InstallAllExtensionsEmptyTest()
-        {
-            bool caughtException = false;
-
-            try
-            {
-                CodeWrapper code = new CodeWrapper();
-                code.InstallAllExtensions("");
-            }
-            catch (IOException)
-            {
-                caughtException = true;
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-
-            Assert.IsTrue(caughtException);
         }
     }
 }

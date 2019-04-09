@@ -9,6 +9,8 @@ namespace codesetTest
     [TestClass]
     public class ConfigWrapperTest
     {
+        //* Test Methods
+
         /// <summary>
         /// <para>
         /// Tests if the Constructor method can correctly handle empty path.

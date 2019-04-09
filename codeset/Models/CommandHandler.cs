@@ -2,13 +2,13 @@ namespace codeset.Models
 {
     public class CommandHandler
     {
-        // Public Methods
-        public int HandleCommand(Options options)
+        //* Public Methods
+        public int HandleCommand(Options options, ConfigWrapper wrapper)
         {
-            if (options.ExtensionFile != null && options.InstallAll)
+            if (options.ExtensionFile == true)
             {
                 CodeWrapper code = new CodeWrapper();
-                code.InstallAllExtensions(options.ExtensionFile);
+                code.InstallAllExtensions(wrapper);
             }
 
             return 0;
