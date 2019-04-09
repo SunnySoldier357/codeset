@@ -1,14 +1,38 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace codeset.Models
 {
     public class ConfigWrapper
     {
         //* Private Static Properties
-        private static string configPath = "/home/sandeepsingh/.config/codeset/config.json";
+        private static string configPath = null;
+
+        //* Public Static Properties
+        public static string ConfigPath
+        {
+            get
+            {
+                if (configPath == null)
+                {
+                    string path = Environment.GetEnvironmentVariable("HOME");
+
+                    DirectoryInfo dir = new DirectoryInfo(path);
+
+                    dir = dir.GetDirectories().FirstOrDefault(d => d.Name == ".config");
+                    dir = dir.GetDirectories().FirstOrDefault(d => d.Name == "codeset");
+                    var configFile = dir.GetFiles().FirstOrDefault(f => f.Name == "config.json");
+
+                    configPath = configFile.FullName;
+                }
+                
+                return configPath;
+            }
+        }
 
         //* Public Properties
         public Dictionary<string, List<string>> Extensions { get; private set; }
@@ -19,13 +43,13 @@ namespace codeset.Models
         {
             // Used for testing
             if (path == null)
-                path = configPath;
+                path = ConfigPath;
 
             JToken configJson = null;
             JObject extensions = null;
 
             using (StreamReader stream = new StreamReader(
-                new FileStream(configPath, FileMode.Open)))
+                new FileStream(ConfigPath, FileMode.Open)))
             {
                 JObject configFile = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
                 configJson = configFile["extensions"];
