@@ -4,6 +4,7 @@ using System;
 using System.Runtime.InteropServices;
 
 using codeset.Models;
+using static codeset.Models.Utility;
 
 namespace codesetTest
 {
@@ -180,9 +181,9 @@ namespace codesetTest
 
             string value = "windows";
 
-            if (Utility.CurrentOS.Equals(OSPlatform.Linux))
+            if (CurrentOS.Equals(OSPlatform.Linux))
                 value = "manjaro";
-            else if (Utility.CurrentOS.Equals(OSPlatform.OSX))
+            else if (CurrentOS.Equals(OSPlatform.OSX))
                 value = "osx";
 
             createAndTestSetting(setting, "testKey", JToken.FromObject(value),
