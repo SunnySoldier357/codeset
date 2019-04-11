@@ -78,6 +78,9 @@ namespace codesetTest
             Assert.IsTrue(caughtException);
         }
 
+        // TODO: Add test method to test if a particular extension is actaully installed
+        //       Then uninstall it
+
         /// <summary>
         /// <para>
         /// Tests if the InstallAllExtension() method can correctly handle null

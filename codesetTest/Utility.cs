@@ -31,7 +31,7 @@ namespace codesetTest
             DirectoryInfo testDir = directories.FirstOrDefault(d => d.Name == "Test");
 
             // Make sure of '/' vs '\'
-            OSPlatform os = CurrentOS;
+            OSPlatform os = CurrentOs;
             string divider = "/";
             if (os.Equals(OSPlatform.Windows))
                 divider = "\\";
@@ -66,7 +66,7 @@ namespace codesetTest
             string path = Directory.GetCurrentDirectory();
             DirectoryInfo dir = new DirectoryInfo(path);
 
-            OSPlatform os = CurrentOS;
+            OSPlatform os = CurrentOs;
             string divider = "/";
             if (os.Equals(OSPlatform.Windows))
                 divider = "\\";

@@ -18,7 +18,7 @@ namespace codesetTest
         /// Tests if the Setting class constructor can correctly handle null value.
         /// </para>
         /// <para>
-        /// Input: null for lines
+        /// Input: null for setting
         /// </para>
         /// <para>
         /// Expected Output: ArgumentNullException thrown
@@ -34,38 +34,6 @@ namespace codesetTest
                 Setting setting = new Setting(null);
             }
             catch (ArgumentNullException)
-            {
-                caughtException = true;
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-
-            Assert.IsTrue(caughtException);
-        }
-
-        /// <summary>
-        /// <para>
-        /// Tests if the Setting class constructor can correctly handle empty value.
-        /// </para>
-        /// <para>
-        /// Input: empty List for lines
-        /// </para>
-        /// <para>
-        /// Expected Output: ArgumentException thrown
-        /// </para>
-        /// </summary>
-        [TestMethod]
-        public void ConstructorEmptyLinesTest()
-        {
-            bool caughtException = false;
-
-            try
-            {
-                Setting setting = new Setting(null);
-            }
-            catch (ArgumentException)
             {
                 caughtException = true;
             }
@@ -181,9 +149,9 @@ namespace codesetTest
 
             string value = "windows";
 
-            if (CurrentOS.Equals(OSPlatform.Linux))
+            if (IsOsLinux())
                 value = "manjaro";
-            else if (CurrentOS.Equals(OSPlatform.OSX))
+            else if (IsOsOsx())
                 value = "osx";
 
             createAndTestSetting(setting, "testKey", JToken.FromObject(value),
