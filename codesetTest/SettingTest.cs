@@ -215,9 +215,14 @@ namespace codesetTest
                 Assert.IsTrue(setting.Key == key,
                     string.Format("Key - Expected Output: {0} vs Output: {1}",
                         key, setting.Key));
-                Assert.IsTrue(setting.Value.ToString() == value.ToString(),
-                    string.Format("Value - Expected Output: {0} vs Output: {1}",
-                        value.ToString(), setting.Value.ToString()));
+                if (setting.ValueForOS == null && value == null)
+                    Assert.IsNull(value);
+                else
+                {
+                    Assert.IsTrue(setting.ValueForOS?.ToString() == value?.ToString(),
+                        string.Format("Value - Expected Output: {0} vs Output: {1}",
+                            value?.ToString(), setting.ValueForOS?.ToString()));
+                }
             }
             catch (Exception e)
             {

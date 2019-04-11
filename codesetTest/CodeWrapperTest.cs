@@ -112,7 +112,7 @@ namespace codesetTest
                 Assert.Fail(e.Message);
             }
 
-            Assert.IsFalse(caughtException);
+            Assert.IsTrue(caughtException);
         }
     }
 }

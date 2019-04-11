@@ -19,7 +19,7 @@ namespace codesetTest
         /// Input: "" for path
         /// </para>
         /// <para>
-        /// Expected Output: IOException thrown
+        /// Expected Output: ArgumentException thrown
         /// </para>
         /// </summary>
         [TestMethod]
@@ -31,7 +31,7 @@ namespace codesetTest
             {
                 ConfigWrapper wrapper = new ConfigWrapper("");
             }
-            catch (IOException)
+            catch (ArgumentException)
             {
                 caughtException = true;
             }

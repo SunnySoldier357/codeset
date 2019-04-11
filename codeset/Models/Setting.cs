@@ -15,9 +15,12 @@ namespace codeset.Models
         {
             get
             {
+                if (Value == null)
+                    return null;
+
                 JToken result = null;
 
-                if (Value.Type == JTokenType.String)
+                if (Value.Type != JTokenType.Object)
                     result = Value;
                 else if (Utility.IsOsWindows())
                 {
@@ -53,6 +56,8 @@ namespace codeset.Models
 
             if (Instruction == null)
                 Value = setting["value"];
+            else
+                Value = null;
         }
     }
 }

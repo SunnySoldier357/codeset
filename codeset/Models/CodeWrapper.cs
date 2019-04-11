@@ -37,8 +37,11 @@ namespace codeset.Models
         /// <returns>
         /// True if the extension was successfully installed, False otherwise.
         /// </returns>
-        public bool InstallExtension(string extension)
+        public void InstallExtension(string extension)
         {
+            if (extension == null)
+                throw new ArgumentNullException(nameof(extension));
+
             bashProcess.Start();
             bashProcess.StandardInput.WriteLine("code --install-extension {0}", extension);
             bashProcess.StandardInput.Flush();
@@ -47,15 +50,16 @@ namespace codeset.Models
             string result = bashProcess.StandardOutput.ReadToEnd().Trim();
 
             // If the string ends in "successfully installed!" or "already installed." return true
-            if (result.Substring(result.Length - 23) == "successfully installed!" ||
-                result.Substring(result.Length - 18) == "already installed.")
-                return true;
-            else
-                return false;
+            if (!(result.Substring(result.Length - 23) == "successfully installed!" ||
+                result.Substring(result.Length - 18) == "already installed."))
+                throw new ArgumentException(nameof(extension));
         }
 
         public bool InstallAllExtensions(ConfigWrapper wrapper)
         {
+            if (wrapper == null)
+                throw new ArgumentNullException(nameof(wrapper));
+
             var extensions = wrapper.Extensions;
 
             int i = 1;

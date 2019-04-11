@@ -49,7 +49,7 @@ namespace codeset.Models
             JObject extensions = null;
 
             using (StreamReader stream = new StreamReader(
-                new FileStream(ConfigPath, FileMode.Open)))
+                new FileStream(path, FileMode.Open)))
             {
                 JObject configFile = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
                 configJson = configFile["extensions"];
