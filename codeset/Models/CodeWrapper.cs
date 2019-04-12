@@ -41,7 +41,7 @@ namespace codeset.Models
             string result = bashProcess.StandardOutput.ReadToEnd().Trim();
 
             foreach (string extension in result.Split('\n'))
-                extensions.Add(extension);
+                extensions.Add(extension.Trim().ToLower());
 
             return extensions;
         }
@@ -82,22 +82,12 @@ namespace codeset.Models
                 throw new ArgumentNullException(nameof(wrapper));
 
             var extensions = wrapper.Extensions;
-
-            int i = 1;
-            int total = extensions.Aggregate(0, (sum, pair) =>
-            {
-                int add = 0;
-
-                if (wrapper.Categories == null ||
-                    pair.Key == "Required" ||
-                    wrapper.Categories.Contains(pair.Key))
-                    add = pair.Value.Count;
-
-                return sum + add;
-            });
-
-            Console.WriteLine("\nBeginning to install {0} extension{1}.\n", total,
-                total == 1 ? "" : "s");
+            // Extension that are going to be installed, not including those
+            // that should be installed but are already installed
+            var extensionsToInstall = new List<string>();
+            // All extensions that should be installed
+            var extensionsToKeep = new List<string>();
+            var installedExtensions = GetExtensions();
 
             foreach (var group in extensions)
             {
@@ -107,15 +97,59 @@ namespace codeset.Models
                 {
                     foreach (var extension in group.Value)
                     {
-                        Console.WriteLine("({0}/{1}) Installing {2}...",
-                            i++, total, extension);
-                        InstallExtension(extension);
+                        string clean = extension.Trim().ToLower();
+
+                        extensionsToKeep.Add(clean);
+
+                        if (!installedExtensions.Contains(clean))
+                            extensionsToInstall.Add(clean);
                     }
                 }
             }
 
-            Console.WriteLine("\nSuccessfully installed {0} extension{1}!", total,
-                total == 1 ? "" : "s");
+            var extensionsToUninstall = installedExtensions.Except(extensionsToKeep);
+
+            int i = 1;
+            int total = extensionsToUninstall.Count();
+
+            if (total > 0)
+            {
+                // Uninstall the extensions that do not belong
+                Console.WriteLine("\nBeginning to uninstall {0} extension{1} that" +
+                " are not in the config file.\n", total, total == 1 ? "" : "s");
+
+                foreach (string extension in extensionsToUninstall)
+                {
+                    Console.WriteLine("({0}/{1}) Uninstalling {2}...",
+                        i++, total, extension);
+                    UninstallExtension(extension);
+                }
+
+                Console.WriteLine("\nSuccessfully uninstalled {0} extension{1}!\n", total,
+                    total == 1 ? "" : "s");
+            }
+
+            i = 1;
+            total = extensionsToInstall.Count;
+
+            if (total > 0)
+            {
+                // Install the extensions that do belong
+                Console.WriteLine("Beginning to install {0} extension{1}.\n", total,
+                    total == 1 ? "" : "s");
+
+                foreach (string extension in extensionsToInstall)
+                {
+                    Console.WriteLine("({0}/{1}) Installing {2}...",
+                        i++, total, extension);
+                    InstallExtension(extension);
+                }
+
+                Console.WriteLine("\nSuccessfully installed {0} extension{1}!", total,
+                    total == 1 ? "" : "s");
+            }
+            else
+                Console.WriteLine("All Required extensions are already installed.");
         }
 
         public void UninstallExtension(string extension)
@@ -129,10 +163,6 @@ namespace codeset.Models
             bashProcess.StandardInput.Close();
 
             string result = bashProcess.StandardOutput.ReadToEnd().Trim();
-
-            // If the string ends in "successfully uninstalled!"
-            if (result.Substring(result.Length - 25) != "successfully uninstalled!")
-                throw new ArgumentException(nameof(extension));
         }
     }
 }
