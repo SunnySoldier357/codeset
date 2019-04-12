@@ -36,8 +36,7 @@ extensions and the full paths can be linked to the main
 
 ```json
 {
-    "extensions": "path to extensions.json",
-    "settings": "path to settings.json",
+    "extensions": "path to extensions.json"
 }
 ```
 
@@ -86,7 +85,12 @@ in the value section.
 }
 ```
 
+## Installation
+
+Extract the folder found in the Releases tab and put that in any folder. Add
+that folder to `PATH` for the command to work.
+
 ## Dependencies
 
-- https://github.com/commandlineparser/commandline/wiki
-- https://www.newtonsoft.com/json/help/html/Introduction.htm
+- [CommandLineParser](https://github.com/commandlineparser/commandline/wiki)
+- [Newtonsoft.Json](https://www.newtonsoft.com/json/help/html/Introduction.htm)
