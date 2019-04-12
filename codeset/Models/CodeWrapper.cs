@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -28,6 +29,23 @@ namespace codeset.Models
 
         //* Public Methods
 
+        public List<string> GetExtensions()
+        {
+            var extensions = new List<string>();
+
+            bashProcess.Start();
+            bashProcess.StandardInput.WriteLine("code --list-extensions");
+            bashProcess.StandardInput.Flush();
+            bashProcess.StandardInput.Close();
+
+            string result = bashProcess.StandardOutput.ReadToEnd().Trim();
+
+            foreach (string extension in result.Split('\n'))
+                extensions.Add(extension);
+
+            return extensions;
+        }
+
         /// <summary>
         /// Installs the specified extension for VS Code.
         /// </summary>
@@ -41,6 +59,9 @@ namespace codeset.Models
         {
             if (extension == null)
                 throw new ArgumentNullException(nameof(extension));
+            
+            if (string.IsNullOrWhiteSpace(extension))
+                throw new ArgumentException(nameof(extension));
 
             bashProcess.Start();
             bashProcess.StandardInput.WriteLine("code --install-extension {0}", extension);
@@ -49,13 +70,13 @@ namespace codeset.Models
 
             string result = bashProcess.StandardOutput.ReadToEnd().Trim();
 
-            // If the string ends in "successfully installed!" or "already installed." return true
+            // If the string ends in "successfully installed!" or "already installed."
             if (!(result.Substring(result.Length - 23) == "successfully installed!" ||
                 result.Substring(result.Length - 18) == "already installed."))
                 throw new ArgumentException(nameof(extension));
         }
 
-        public bool InstallAllExtensions(ConfigWrapper wrapper)
+        public void InstallAllExtensions(ConfigWrapper wrapper)
         {
             if (wrapper == null)
                 throw new ArgumentNullException(nameof(wrapper));
@@ -95,8 +116,23 @@ namespace codeset.Models
 
             Console.WriteLine("\nSuccessfully installed {0} extension{1}!", total,
                 total == 1 ? "" : "s");
+        }
 
-            return true;
+        public void UninstallExtension(string extension)
+        {
+            if (extension == null)
+                throw new ArgumentNullException(nameof(extension));
+
+            bashProcess.Start();
+            bashProcess.StandardInput.WriteLine("code --uninstall-extension {0}", extension);
+            bashProcess.StandardInput.Flush();
+            bashProcess.StandardInput.Close();
+
+            string result = bashProcess.StandardOutput.ReadToEnd().Trim();
+
+            // If the string ends in "successfully uninstalled!"
+            if (result.Substring(result.Length - 25) != "successfully uninstalled!")
+                throw new ArgumentException(nameof(extension));
         }
     }
 }
