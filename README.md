@@ -15,6 +15,12 @@ The application looks for a JSON configuration file in the
 following locations: `$HOME/.config/codeset/config.json`
 or `$HOME\.config\codeset\config.json`.
 
+If the categories property is not present, `codeset` will assume that it needs
+to monitor all of the categories. The Required category is special in that
+regardless if it is specified or not, it will always be monitored and there is
+no way to disable it. Put an empty array if you just want to have the Required
+categories monitored.
+
 ```json
 {
     "extensions": {
@@ -22,9 +28,9 @@ or `$HOME\.config\codeset\config.json`.
             "aaron-bond.better-comments"
         ]
     },
-    "settings": {
-        "editor.fontFamily": "Fira Code"
-    },
+    "categories": [
+        "C#"
+    ]
 }
 ```
 
@@ -36,7 +42,7 @@ extensions and the full paths can be linked to the main
 
 ```json
 {
-    "extensions": "path to extensions.json"
+    "extensions": "path to extensions.json",
 }
 ```
 

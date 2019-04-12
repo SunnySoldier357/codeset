@@ -63,18 +63,33 @@ namespace codeset.Models
             var extensions = wrapper.Extensions;
 
             int i = 1;
-            int total = extensions.Sum(e => e.Value.Count);
+            int total = extensions.Aggregate(0, (sum, pair) =>
+            {
+                int add = 0;
+
+                if (wrapper.Categories == null ||
+                    pair.Key == "Required" ||
+                    wrapper.Categories.Contains(pair.Key))
+                    add = pair.Value.Count;
+
+                return sum + add;
+            });
 
             Console.WriteLine("\nBeginning to install {0} extension{1}.\n", total,
                 total == 1 ? "" : "s");
 
-            foreach (var group in extensions.Values)
+            foreach (var group in extensions)
             {
-                foreach (var extension in group)
+                if (wrapper.Categories == null ||
+                    group.Key == "Required" ||
+                    wrapper.Categories.Contains(group.Key))
                 {
-                    Console.WriteLine("({0}/{1}) Installing {2}...",
-                        i++, total, extension);
-                    InstallExtension(extension);
+                    foreach (var extension in group.Value)
+                    {
+                        Console.WriteLine("({0}/{1}) Installing {2}...",
+                            i++, total, extension);
+                        InstallExtension(extension);
+                    }
                 }
             }
 
