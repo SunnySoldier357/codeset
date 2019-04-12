@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Runtime.InteropServices;
 
 using codeset.Models;
 using static codeset.Models.Utility;
@@ -106,7 +105,7 @@ namespace codesetTest
             JObject setting = JObject.FromObject(new
             {
                 key = "testKey",
-                value = value
+                value
             });
 
             createAndTestSetting(setting, "testKey", value, null);

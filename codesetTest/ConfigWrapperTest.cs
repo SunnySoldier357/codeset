@@ -1,8 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
 using System;
-using System.IO;
 
 using codeset.Models;
+using static codesetTest.Utility;
 
 namespace codesetTest
 {
@@ -13,7 +14,7 @@ namespace codesetTest
 
         /// <summary>
         /// <para>
-        /// Tests if the Constructor method can correctly handle empty path.
+        /// Tests if the Constructor can correctly handle empty path.
         /// </para>
         /// <para>
         /// Input: "" for path
@@ -43,8 +44,189 @@ namespace codesetTest
             Assert.IsTrue(caughtException);
         }
 
-        // TODO: Add a unit test to test Constructor's algorithm
-        //     1) Everything in 1 file
-        //     2) Both settings and extensions in another file
+        /// <summary>
+        /// <para>
+        /// Tests the algorithm of the Constructor to ensure it can correctly
+        /// turn config file at the path into a Dictionary for the extensions.
+        /// </para>
+        /// <para>
+        /// Input:
+        /// {
+        ///     "extensions": {
+        ///         "Required": [
+        ///             "item 1",
+        ///             "item 2"
+        ///         ],
+        ///         "C#": [
+        ///             "item 3",
+        ///             "item 4"
+        ///         ]
+        ///     }
+        /// }
+        /// </para>
+        /// <para>
+        /// Expected Output: Required and C# as keys and items 1-4 as values in
+        /// lists to their respective key
+        /// </para>
+        /// </summary>
+        [TestMethod]
+        public void ConstructorOneFileExtensionTest()
+        {
+            string fileName = "ConstructorOneFileExtensionTest";
+
+            JObject extensions = JObject.FromObject(new
+            {
+                Required = new string[]
+                {
+                    "item 1",
+                    "item 2"
+                }
+            });
+
+            extensions.Add(new JProperty("C#", new string[]
+            {
+                "item 3",
+                "item 4"
+            }));
+
+            JObject config = JObject.FromObject(new
+            {
+                extensions
+            });
+
+            string path = CreateFile(fileName, "json",
+                config.ToString().Split('\n'));
+            
+            try
+            {
+                ConfigWrapper wrapper = new ConfigWrapper(path);
+                var result = wrapper.Extensions;
+
+                if (result.ContainsKey("Required"))
+                {
+                    var list = result["Required"];
+
+                    Assert.IsTrue(list[0] == "item 1");
+                    Assert.IsTrue(list[1] == "item 2");
+                }
+                else
+                    Assert.Fail("No Key found for 'Required'");
+
+                if (result.ContainsKey("C#"))
+                {
+                    var list = result["C#"];
+
+                    Assert.IsTrue(list[0] == "item 3");
+                    Assert.IsTrue(list[1] == "item 4");
+                }
+                else
+                    Assert.Fail("No Key found for 'C#'");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+            finally
+            {
+                DeleteFile(fileName, "json");
+            }
+        }
+
+        /// <summary>
+        /// <para>
+        /// Tests the algorithm of the Constructor to ensure it can correctly
+        /// turn config file at the path into a Dictionary for the extensions.
+        /// </para>
+        /// <para>
+        /// Input:
+        /// {
+        ///     "extensions": "path to extensions.json"
+        /// }
+        /// </para>
+        /// <para>
+        /// extensions.json:
+        /// {
+        ///     "Required": [
+        ///         "item 1",
+        ///         "item 2"
+        ///     ],
+        ///     "C#": [
+        ///         "item 3",
+        ///         "item 4"
+        ///     ]
+        /// }
+        /// </para>
+        /// <para>
+        /// Expected Output: Required and C# as keys and items 1-4 as values in
+        /// lists to their respective key
+        /// </para>
+        /// </summary>
+        [TestMethod]
+        public void ConstructorDifferentFileExtensionTest()
+        {
+            string configFileName = "config";
+            string extensionsFileName = "extensions";
+
+            JObject extensions = JObject.FromObject(new
+            {
+                Required = new string[]
+                {
+                    "item 1",
+                    "item 2"
+                }
+            });
+
+            extensions.Add(new JProperty("C#", new string[]
+            {
+                "item 3",
+                "item 4"
+            }));
+            
+            string extensionsPath = CreateFile(extensionsFileName, "json",
+                extensions.ToString().Split('\n'));
+
+            JObject config = JObject.FromObject(new
+            {
+                extensions = extensionsPath
+            });
+
+            string configPath = CreateFile(configFileName, "json",
+                config.ToString().Split('\n'));
+            
+            try
+            {
+                ConfigWrapper wrapper = new ConfigWrapper(configPath);
+                var result = wrapper.Extensions;
+
+                if (result.ContainsKey("Required"))
+                {
+                    var list = result["Required"];
+
+                    Assert.IsTrue(list[0] == "item 1");
+                    Assert.IsTrue(list[1] == "item 2");
+                }
+                else
+                    Assert.Fail("No Key found for 'Required'");
+
+                if (result.ContainsKey("C#"))
+                {
+                    var list = result["C#"];
+
+                    Assert.IsTrue(list[0] == "item 3");
+                    Assert.IsTrue(list[1] == "item 4");
+                }
+                else
+                    Assert.Fail("No Key found for 'C#'");
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+            finally
+            {
+                DeleteFile(configFileName, "json");
+                DeleteFile(extensionsFileName, "json");
+            }
+        }
     }
 }

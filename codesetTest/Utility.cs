@@ -77,7 +77,9 @@ namespace codesetTest
             File.Delete(string.Format("{0}{1}{2}.{3}",
                 testDir.FullName, divider, fileName, fileExtension));
 
-            testDir.Delete();
+            if (testDir.GetFiles().Count() == 0 &&
+                testDir.GetDirectories().Count() == 0)
+                testDir.Delete();
         }
     }
 }
