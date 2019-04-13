@@ -38,6 +38,8 @@ namespace codeset.Models
         public Dictionary<string, List<string>> Extensions { get; private set; }
         public Dictionary<string, List<Setting>> Settings { get; private set; }
 
+        public List<string> Categories { get; private set; }
+
         //* Constructor
         public ConfigWrapper(string path = null)
         {
@@ -45,32 +47,50 @@ namespace codeset.Models
             if (path == null)
                 path = ConfigPath;
 
-            JToken configJson = null;
+            JToken extensionsJson = null;
+            JToken categoriesJson = null;
             JObject extensions = null;
 
             using (StreamReader stream = new StreamReader(
-                new FileStream(ConfigPath, FileMode.Open)))
+                new FileStream(path, FileMode.Open)))
             {
                 JObject configFile = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
-                configJson = configFile["extensions"];
+                extensionsJson = configFile["extensions"];
+                categoriesJson = configFile["categories"];
             }
 
-            if (configJson is JObject)
-                extensions = (JObject) configJson;
+            if (extensionsJson is JObject)
+                extensions = (JObject) extensionsJson;
             else
             {
                 // Get the JSON file at that path and set extensions to that
                 using (StreamReader stream = new StreamReader(
-                    new FileStream(configJson.ToString(), FileMode.Open)))
+                    new FileStream(extensionsJson.ToString(), FileMode.Open)))
                 {
                     extensions = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
                 }
             }
 
             Extensions = convertExtensionsToDic(extensions);
+
+            if (categoriesJson != null)
+                Categories = convertCategoriesToList(categoriesJson);
+            else
+                Categories = null;
         }
 
         //* Private Methods
+        private List<string> convertCategoriesToList(JToken categories)
+        {
+            var list = new List<string>();
+
+            JArray array = (JArray) categories;
+            foreach (JToken category in array)
+                list.Add(category.ToString());
+
+            return list;
+        }
+
         private Dictionary<string, List<string>> convertExtensionsToDic(JObject extensions)
         {
             var dictionary = new Dictionary<string, List<string>>();

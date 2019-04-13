@@ -3,32 +3,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
+using static codeset.Models.Utility;
+
 namespace codesetTest
 {
     public static class Utility
     {
-        //* Private Static Properties
-        private static OSPlatform? currentOS = null;
-
-        //* Public Static Properties
-        public static OSPlatform CurrentOS
-        {
-            get
-            {
-                if (currentOS == null)
-                {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                        currentOS = OSPlatform.Windows;
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                        currentOS = OSPlatform.OSX;
-                    else
-                        currentOS = OSPlatform.Linux;
-                }
-                
-                return (OSPlatform) currentOS;
-            }
-        }
-
         /// <summary>
         /// Creates a file with the specified name and contents in a automatically
         /// created Test folder (deep in Debug folder).
@@ -51,7 +31,7 @@ namespace codesetTest
             DirectoryInfo testDir = directories.FirstOrDefault(d => d.Name == "Test");
 
             // Make sure of '/' vs '\'
-            OSPlatform os = Utility.CurrentOS;
+            OSPlatform os = CurrentOs;
             string divider = "/";
             if (os.Equals(OSPlatform.Windows))
                 divider = "\\";
@@ -86,7 +66,7 @@ namespace codesetTest
             string path = Directory.GetCurrentDirectory();
             DirectoryInfo dir = new DirectoryInfo(path);
 
-            OSPlatform os = Utility.CurrentOS;
+            OSPlatform os = CurrentOs;
             string divider = "/";
             if (os.Equals(OSPlatform.Windows))
                 divider = "\\";
@@ -97,7 +77,9 @@ namespace codesetTest
             File.Delete(string.Format("{0}{1}{2}.{3}",
                 testDir.FullName, divider, fileName, fileExtension));
 
-            testDir.Delete();
+            if (testDir.GetFiles().Count() == 0 &&
+                testDir.GetDirectories().Count() == 0)
+                testDir.Delete();
         }
     }
 }

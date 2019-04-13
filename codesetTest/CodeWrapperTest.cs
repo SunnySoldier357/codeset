@@ -80,6 +80,45 @@ namespace codesetTest
 
         /// <summary>
         /// <para>
+        /// Tests if the InstallExtension() method can correctly install a
+        /// particular extension, then tests if the UninstallExtension() method
+        /// can correctly uninstall that extension.
+        /// </para>
+        /// </summary>
+        [TestMethod]
+        public void InstallAndUninstallExtensionTest()
+        {
+            string extension = "jsiwhitehead.vscode-maraca";
+
+            try
+            {
+                CodeWrapper code = new CodeWrapper();
+
+                var extensions = code.GetExtensions();
+
+                if (extensions.Contains(extension))
+                    Assert.Fail("Extension already installed before test method began");
+
+                // Testing the install
+                code.InstallExtension(extension);
+                extensions = code.GetExtensions();
+
+                Assert.IsTrue(extensions.Contains(extension));
+
+                // Testing the uninstall
+                code.UninstallExtension(extension);
+                extensions = code.GetExtensions();
+
+                Assert.IsFalse(extensions.Contains(extension));
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// <para>
         /// Tests if the InstallAllExtension() method can correctly handle null
         /// path.
         /// </para>
@@ -109,7 +148,7 @@ namespace codesetTest
                 Assert.Fail(e.Message);
             }
 
-            Assert.IsFalse(caughtException);
+            Assert.IsTrue(caughtException);
         }
     }
 }

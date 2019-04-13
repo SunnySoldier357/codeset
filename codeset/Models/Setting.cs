@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json.Linq;
 
 namespace codeset.Models
@@ -7,12 +8,56 @@ namespace codeset.Models
         //* Public Properties
         public string Instruction { get; }
         public string Key { get; }
-        public JObject Value { get; set; }
+
+        public JToken Value { get; set; }
+
+        public JToken ValueForOS
+        {
+            get
+            {
+                if (Value == null)
+                    return null;
+
+                JToken result = null;
+
+                if (Value.Type != JTokenType.Object)
+                    result = Value;
+                else if (Utility.IsOsWindows())
+                {
+                    var temp = Value["windows"];
+                    if (temp != null)
+                        result = temp;
+                }
+                else if (Utility.IsOsOsx())
+                {
+                    var temp = Value["osx"];
+                    if (temp != null)
+                        result = temp;
+                }
+                else if (Utility.IsOsLinux())
+                {
+                    var temp = Value["linux"];
+                    if (temp != null)
+                        result = temp;
+                }
+
+                return result;
+            }
+        }
 
         //* Constructors
         public Setting(JObject setting)
         {
-            // TODO: Initialise variables
+            if (setting == null)
+                throw new ArgumentNullException(nameof(setting));
+
+            Instruction = setting["instruction"]?.ToString();
+            Key = setting["key"].ToString();
+
+            if (Instruction == null)
+                Value = setting["value"];
+            else
+                Value = null;
         }
     }
 }

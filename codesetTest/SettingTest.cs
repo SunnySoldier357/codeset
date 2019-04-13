@@ -1,9 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Runtime.InteropServices;
 
 using codeset.Models;
+using static codeset.Models.Utility;
 
 namespace codesetTest
 {
@@ -17,7 +17,7 @@ namespace codesetTest
         /// Tests if the Setting class constructor can correctly handle null value.
         /// </para>
         /// <para>
-        /// Input: null for lines
+        /// Input: null for setting
         /// </para>
         /// <para>
         /// Expected Output: ArgumentNullException thrown
@@ -33,38 +33,6 @@ namespace codesetTest
                 Setting setting = new Setting(null);
             }
             catch (ArgumentNullException)
-            {
-                caughtException = true;
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-
-            Assert.IsTrue(caughtException);
-        }
-
-        /// <summary>
-        /// <para>
-        /// Tests if the Setting class constructor can correctly handle empty value.
-        /// </para>
-        /// <para>
-        /// Input: empty List for lines
-        /// </para>
-        /// <para>
-        /// Expected Output: ArgumentException thrown
-        /// </para>
-        /// </summary>
-        [TestMethod]
-        public void ConstructorEmptyLinesTest()
-        {
-            bool caughtException = false;
-
-            try
-            {
-                Setting setting = new Setting(null);
-            }
-            catch (ArgumentException)
             {
                 caughtException = true;
             }
@@ -137,7 +105,7 @@ namespace codesetTest
             JObject setting = JObject.FromObject(new
             {
                 key = "testKey",
-                value = value
+                value
             });
 
             createAndTestSetting(setting, "testKey", value, null);
@@ -180,9 +148,9 @@ namespace codesetTest
 
             string value = "windows";
 
-            if (Utility.CurrentOS.Equals(OSPlatform.Linux))
+            if (IsOsLinux())
                 value = "manjaro";
-            else if (Utility.CurrentOS.Equals(OSPlatform.OSX))
+            else if (IsOsOsx())
                 value = "osx";
 
             createAndTestSetting(setting, "testKey", JToken.FromObject(value),
@@ -246,9 +214,14 @@ namespace codesetTest
                 Assert.IsTrue(setting.Key == key,
                     string.Format("Key - Expected Output: {0} vs Output: {1}",
                         key, setting.Key));
-                Assert.IsTrue(setting.Value.ToString() == value.ToString(),
-                    string.Format("Value - Expected Output: {0} vs Output: {1}",
-                        value.ToString(), setting.Value.ToString()));
+                if (setting.ValueForOS == null && value == null)
+                    Assert.IsNull(value);
+                else
+                {
+                    Assert.IsTrue(setting.ValueForOS?.ToString() == value?.ToString(),
+                        string.Format("Value - Expected Output: {0} vs Output: {1}",
+                            value?.ToString(), setting.ValueForOS?.ToString()));
+                }
             }
             catch (Exception e)
             {
