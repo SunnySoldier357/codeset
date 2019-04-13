@@ -28,6 +28,25 @@ categories monitored.
     "extensions": {
         "Required": [
             "aaron-bond.better-comments"
+        ],
+
+        "C#": [
+            "ms-vscode.csharp"
+        ]
+    },
+    "settings": {
+        "Required": [
+            {
+                "key": "better-comments.highlightPlainText",
+                "value": false
+            }
+        ],
+
+        "C#": [
+            {
+                "key": "razor.disabled",
+                "value": true
+            }
         ]
     },
     "categories": [
@@ -45,9 +64,55 @@ extensions and the full paths can be linked to the main
 ```json
 {
     "extensions": "path to extensions.json",
+    "settings": "path to settings.json",
     "categories": [
         "C#"
     ]
+}
+```
+
+For each setting in the settings portion of the configuration, it must follow
+this convention:
+
+```json
+{
+    "key": "",
+    "value": "",
+    "instruction": ""
+}
+```
+
+A few examples are show below...
+
+1. Different values for different Operating Systems
+
+If on Linux or OSX, the value of the setting will be false and vice versa for Windows.
+
+```json
+{
+    "key": "path-autocomplete.useBackslash",
+    "value": {
+        "windows": true,
+        "linux": false,
+        "osx": false
+    }
+}
+```
+
+2. Providing instruction to prompt the user to fill in.
+
+In this case, any value provided will be considered the default value but the
+user will still be prompted. This only occurs if the operating system is listed
+in the value section.
+
+```json
+{
+    "key": "java.format.settings.url",
+    "value": {
+        "windows": "",
+        "linux": ""
+    },
+    "instruction": "File location for Java Formatter (formatter.xml)"
 }
 ```
 
