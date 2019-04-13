@@ -7,7 +7,9 @@ single JSON config file in order to store all of this information.
 ## codeset's functions
 
 **codeset --install-extensions** : Installs VS Code extensions based on those
-specified in the config file ([see below](https://github.com/SunnySoldier357/codeset#sample-config-file-configjson))
+specified in the config file ([see below](https://github.com/SunnySoldier357/codeset#sample-config-file-configjson)).
+Will respect the categories provided in the config file and will remove any extensions
+that are not specified in the config file.
  
 ## Sample config file (config.json)
 
@@ -43,51 +45,9 @@ extensions and the full paths can be linked to the main
 ```json
 {
     "extensions": "path to extensions.json",
-}
-```
-
-For each setting in the settings portion of the configuration, it must follow
-this convention:
-
-```json
-{
-    "key": "",
-    "value": "",
-    "instruction": ""
-}
-```
-
-A few examples are show below...
-
-1. Different values for different Operating Systems
-
-If on Linux or OSX, the value of the setting will be false and vice versa for Windows.
-
-```json
-{
-    "key": "path-autocomplete.useBackslash",
-    "value": {
-        "windows": true,
-        "linux": false,
-        "osx": false
-    }
-}
-```
-
-2. Providing instruction to prompt the user to fill in.
-
-In this case, any value provided will be considered the default value but the
-user will still be prompted. This only occurs if the operating system is listed
-in the value section.
-
-```json
-{
-    "key": "java.format.settings.url",
-    "value": {
-        "windows": "",
-        "linux": ""
-    },
-    "instruction": "File location for Java Formatter (formatter.xml)"
+    "categories": [
+        "C#"
+    ]
 }
 ```
 
