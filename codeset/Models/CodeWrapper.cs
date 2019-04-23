@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace codeset.Models
@@ -8,24 +7,7 @@ namespace codeset.Models
     public class CodeWrapper
     {
         //* Private Properties
-        private Process bashProcess { get; set; }
-
-        //* Constructors
-        public CodeWrapper()
-        {
-            bashProcess = new Process();
-            bashProcess.StartInfo.FileName = "bash";
-            bashProcess.StartInfo.RedirectStandardInput = true;
-            bashProcess.StartInfo.RedirectStandardOutput = true;
-            bashProcess.StartInfo.RedirectStandardError = true;
-            bashProcess.StartInfo.CreateNoWindow = true;
-            bashProcess.StartInfo.UseShellExecute = false;
-        }
-
-        ~CodeWrapper()
-        {
-            bashProcess.WaitForExit();
-        }
+        private TerminalWrapper terminal = new TerminalWrapper();
 
         //* Public Methods
 
@@ -33,12 +15,7 @@ namespace codeset.Models
         {
             var extensions = new List<string>();
 
-            bashProcess.Start();
-            bashProcess.StandardInput.WriteLine("code --list-extensions");
-            bashProcess.StandardInput.Flush();
-            bashProcess.StandardInput.Close();
-
-            string result = bashProcess.StandardOutput.ReadToEnd().Trim();
+            string result = terminal.Execute("code --list-extensions");
 
             foreach (string extension in result.Split('\n'))
                 extensions.Add(extension.Trim().ToLower());
@@ -63,12 +40,8 @@ namespace codeset.Models
             if (string.IsNullOrWhiteSpace(extension))
                 throw new ArgumentException(nameof(extension));
 
-            bashProcess.Start();
-            bashProcess.StandardInput.WriteLine("code --install-extension {0}", extension);
-            bashProcess.StandardInput.Flush();
-            bashProcess.StandardInput.Close();
-
-            string result = bashProcess.StandardOutput.ReadToEnd().Trim();
+            string result = terminal.Execute(string.Format(
+                "code --install-extension {0}", extension));;
 
             // If the string ends in "successfully installed!" or "already installed."
             if (!(result.Substring(result.Length - 23) == "successfully installed!" ||
