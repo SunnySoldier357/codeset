@@ -47,17 +47,27 @@ namespace codeset.Models
             if (path == null)
                 path = ConfigPath;
 
-            JToken extensionsJson = null;
             JToken categoriesJson = null;
+            JToken extensionsJson = null;
+            JToken settingsJson = null;
+
             JObject extensions = null;
+            JObject settings = null;
 
             using (StreamReader stream = new StreamReader(
                 new FileStream(path, FileMode.Open)))
             {
                 JObject configFile = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
-                extensionsJson = configFile["extensions"];
+
                 categoriesJson = configFile["categories"];
+                extensionsJson = configFile["extensions"];
+                settingsJson = configFile["settings"];
             }
+            
+            if (categoriesJson != null)
+                Categories = convertCategoriesToList(categoriesJson);
+            else
+                Categories = null;
 
             if (extensionsJson is JObject)
                 extensions = (JObject) extensionsJson;
@@ -73,10 +83,19 @@ namespace codeset.Models
 
             Extensions = convertExtensionsToDic(extensions);
 
-            if (categoriesJson != null)
-                Categories = convertCategoriesToList(categoriesJson);
+            if (settingsJson is JObject)
+                settings = (JObject) settingsJson;
             else
-                Categories = null;
+            {
+                // Get the JSON file at that path and set extensions to that
+                using (StreamReader stream = new StreamReader(
+                    new FileStream(settingsJson.ToString(), FileMode.Open)))
+                {
+                    settings = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
+                }
+            }
+
+            Settings = convertSettingsToDic(settings);
         }
 
         //* Private Methods
@@ -101,10 +120,32 @@ namespace codeset.Models
             {
                 var values = new List<string>();
 
-                foreach (var value in (JArray) property.Value)
+                foreach (JToken value in (JArray) property.Value)
                     values.Add(value.ToString());
 
                 dictionary[property.Name] = values;
+            }
+
+            return dictionary;
+        }
+
+        private Dictionary<string, List<Setting>> convertSettingsToDic(JObject settings)
+        {
+            var dictionary = new Dictionary<string, List<Setting>>();
+
+            var categories = settings.Properties();
+
+            foreach (JProperty category in categories)
+            {
+                var values = new List<Setting>();
+
+                foreach (JToken value in (JArray) category.Value)
+                {
+                    Setting temp = new Setting((JObject) value);
+                    values.Add(temp);
+                }
+
+                dictionary[category.Name] = values;
             }
 
             return dictionary;

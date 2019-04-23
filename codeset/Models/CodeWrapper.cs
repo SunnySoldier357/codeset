@@ -164,5 +164,10 @@ namespace codeset.Models
 
             string result = bashProcess.StandardOutput.ReadToEnd().Trim();
         }
+
+        public void UpdateSettings(ConfigWrapper wrapper)
+        {
+            
+        }
     }
 }

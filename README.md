@@ -6,7 +6,7 @@ single JSON config file in order to store all of this information.
 
 ## codeset's functions
 
-**codeset --install-extensions** : Installs VS Code extensions based on those
+**codeset --update-extensions** : Installs VS Code extensions based on those
 specified in the config file ([see below](https://github.com/SunnySoldier357/codeset#sample-config-file-configjson)).
 Will respect the categories provided in the config file and will remove any extensions
 that are not specified in the config file.
@@ -115,11 +115,6 @@ in the value section.
     "instruction": "File location for Java Formatter (formatter.xml)"
 }
 ```
-
-## Installation
-
-Extract the folder found in the Releases tab and put that in any folder. Add
-that folder to `PATH` for the command to work.
 
 ## Installation
 
