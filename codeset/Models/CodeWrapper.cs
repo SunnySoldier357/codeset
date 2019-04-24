@@ -130,12 +130,7 @@ namespace codeset.Models
             if (extension == null)
                 throw new ArgumentNullException(nameof(extension));
 
-            bashProcess.Start();
-            bashProcess.StandardInput.WriteLine("code --uninstall-extension {0}", extension);
-            bashProcess.StandardInput.Flush();
-            bashProcess.StandardInput.Close();
-
-            string result = bashProcess.StandardOutput.ReadToEnd().Trim();
+            string result = terminal.Execute(string.Format("code --uninstall-extension {0}", extension));
         }
 
         public void UpdateSettings(ConfigWrapper wrapper)
