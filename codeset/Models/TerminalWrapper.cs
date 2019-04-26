@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 
 namespace codeset.Models
@@ -26,6 +27,9 @@ namespace codeset.Models
         //* Public Methods
         public string Execute(string command)
         {
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+
             process.Start();
             process.StandardInput.WriteLine(command);
             process.StandardInput.Flush();
