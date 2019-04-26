@@ -69,33 +69,43 @@ namespace codeset.Models
             else
                 Categories = null;
 
-            if (extensionsJson is JObject)
-                extensions = (JObject) extensionsJson;
+            if (extensionsJson == null)
+                Extensions = null;
             else
             {
-                // Get the JSON file at that path and set extensions to that
-                using (StreamReader stream = new StreamReader(
-                    new FileStream(extensionsJson.ToString(), FileMode.Open)))
+                if (extensionsJson is JObject)
+                    extensions = (JObject)extensionsJson;
+                else
                 {
-                    extensions = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
+                    // Get the JSON file at that path and set extensions to that
+                    using (StreamReader stream = new StreamReader(
+                        new FileStream(extensionsJson.ToString(), FileMode.Open)))
+                    {
+                        extensions = (JObject)JToken.ReadFrom(new JsonTextReader(stream));
+                    }
                 }
+
+                Extensions = convertExtensionsToDic(extensions);
             }
 
-            Extensions = convertExtensionsToDic(extensions);
-
-            if (settingsJson is JObject)
-                settings = (JObject) settingsJson;
+            if (settingsJson == null)
+                Settings = null;
             else
             {
-                // Get the JSON file at that path and set extensions to that
-                using (StreamReader stream = new StreamReader(
-                    new FileStream(settingsJson.ToString(), FileMode.Open)))
+                if (settingsJson is JObject)
+                    settings = (JObject)settingsJson;
+                else
                 {
-                    settings = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
+                    // Get the JSON file at that path and set extensions to that
+                    using (StreamReader stream = new StreamReader(
+                        new FileStream(settingsJson.ToString(), FileMode.Open)))
+                    {
+                        settings = (JObject)JToken.ReadFrom(new JsonTextReader(stream));
+                    }
                 }
-            }
 
-            Settings = convertSettingsToDic(settings);
+                Settings = convertSettingsToDic(settings);
+            }
         }
 
         //* Private Methods

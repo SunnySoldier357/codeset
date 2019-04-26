@@ -59,5 +59,18 @@ namespace codeset.Models
             else
                 Value = null;
         }
+
+        //* Overridden Methods
+        public override bool Equals(object obj)
+        {
+            if (obj is Setting other)
+            {
+                return Instruction == other.Instruction &&
+                    Key == other.Key &&
+                    Value.Equals(other.Value);
+            }
+
+            return false;
+        }
     }
 }
