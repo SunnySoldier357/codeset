@@ -63,9 +63,7 @@ namespace codeset.Models
 
             foreach (var group in extensions)
             {
-                if (wrapper.Categories == null ||
-                    group.Key == "Required" ||
-                    wrapper.Categories.Contains(group.Key))
+                if (wrapper.Categories.Contains(group.Key))
                 {
                     foreach (var extension in group.Value)
                     {

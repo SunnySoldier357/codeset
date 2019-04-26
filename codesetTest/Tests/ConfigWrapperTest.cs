@@ -48,6 +48,65 @@ namespace codesetTest.Tests
         /// <summary>
         /// <para>
         /// Tests the algorithm of the Constructor to ensure it can correctly
+        /// use the config file at the path to create a List for the
+        /// categories.
+        /// </para>
+        /// <para>
+        /// config.json:
+        /// {
+        ///     "categories": [
+        ///         "Category 1",
+        ///         "Category 2"
+        ///     ]
+        /// }
+        /// </para>
+        /// <para>
+        /// Expected Output: A List with 3 categories - "Required", "Category 1",
+        /// "Category 2"
+        /// </para>
+        /// </summary>
+        [TestMethod]
+        public void ConstructorOneFileCategoriesTest()
+        {
+            string fileName = "config";
+
+            JArray categories = JArray.FromObject(new string[]
+            {
+                "Category 1",
+                "Category 2"
+            });
+
+            JObject config = JObject.FromObject(new
+            {
+                categories
+            });
+
+            string path = CreateFile(fileName, "json",
+                config.ToString().Split('\n'));
+
+            try
+            {
+                ConfigWrapper wrapper = new ConfigWrapper(path);
+                var result = wrapper.Categories;
+
+                Assert.IsTrue(result.Contains("Required"));
+
+                for (int i = 0; i < 2; i++)
+                    Assert.IsTrue(result.Contains(categories[i].ToString()));
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+            finally
+            {
+                DeleteFile(fileName, "json");
+            }
+        }
+
+        /// <summary>
+        /// <para>
+        /// Tests the algorithm of the Constructor to ensure it can correctly
         /// use the config file at the path to create a Dictionary for the
         /// extensions.
         /// </para>
@@ -74,7 +133,7 @@ namespace codesetTest.Tests
         [TestMethod]
         public void ConstructorOneFileExtensionTest()
         {
-            string fileName = "ConstructorOneFileExtensionTest";
+            string fileName = "config";
 
             JObject extensions = createExtensionJObject();
 
@@ -209,7 +268,7 @@ namespace codesetTest.Tests
         [TestMethod]
         public void ConstructorOneFileSettingTest()
         {
-            string fileName = "ConstructorOneFileSettingTest";
+            string fileName = "config";
 
             JObject settings = createSettingJObject();
 

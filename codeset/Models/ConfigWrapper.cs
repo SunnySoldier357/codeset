@@ -67,7 +67,9 @@ namespace codeset.Models
             if (categoriesJson != null)
                 Categories = convertCategoriesToList(categoriesJson);
             else
-                Categories = null;
+                Categories = new List<string>();
+
+            Categories.Add("Required");
 
             if (extensionsJson == null)
                 Extensions = null;
