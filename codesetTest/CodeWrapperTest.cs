@@ -150,5 +150,73 @@ namespace codesetTest
 
             Assert.IsTrue(caughtException);
         }
+
+        /// <summary>
+        /// <para>
+        /// Tests if the UninstallExtension() method can correctly handle null
+        /// extension name.
+        /// </para>
+        /// <para>
+        /// Input: null for extension
+        /// </para>
+        /// <para>
+        /// Expected Output: ArgumentNullException thrown
+        /// </para>
+        /// </summary>
+        [TestMethod]
+        public void UninstallExtensionNullTest()
+        {
+            bool caughtException = false;
+
+            try
+            {
+                CodeWrapper code = new CodeWrapper();
+                code.UninstallExtension(null);
+            }
+            catch (ArgumentNullException)
+            {
+                caughtException = true;
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+
+            Assert.IsTrue(caughtException);
+        }
+
+        /// <summary>
+        /// <para>
+        /// Tests if the UninstallExtension() method can correctly handle empty
+        /// extension name.
+        /// </para>
+        /// <para>
+        /// Input: "" for extension
+        /// </para>
+        /// <para>
+        /// Expected Output: ArgumentException thrown
+        /// </para>
+        /// </summary>
+        [TestMethod]
+        public void UninstallExtensionEmptyTest()
+        {
+            bool caughtException = false;
+
+            try
+            {
+                CodeWrapper code = new CodeWrapper();
+                code.UninstallExtension("");
+            }
+            catch (ArgumentException)
+            {
+                caughtException = true;
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
+
+            Assert.IsTrue(caughtException);
+        }
     }
 }
