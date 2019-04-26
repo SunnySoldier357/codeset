@@ -25,23 +25,11 @@ namespace codesetTest.Tests
         [TestMethod]
         public void InstallExtensionNullTest()
         {
-            bool caughtException = false;
-            
-            try
+            Assert.ThrowsException<ArgumentNullException>(() =>
             {
                 CodeWrapper code = new CodeWrapper();
                 code.InstallExtension(null);
-            }
-            catch (ArgumentNullException)
-            {
-                caughtException = true;
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-
-            Assert.IsTrue(caughtException);
+            });
         }
 
         /// <summary>
@@ -59,23 +47,11 @@ namespace codesetTest.Tests
         [TestMethod]
         public void InstallExtensionEmptyTest()
         {
-            bool caughtException = false;
-
-            try
+            Assert.ThrowsException<ArgumentException>(() =>
             {
                 CodeWrapper code = new CodeWrapper();
                 code.InstallExtension("");
-            }
-            catch (ArgumentException)
-            {
-                caughtException = true;
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-
-            Assert.IsTrue(caughtException);
+            });
         }
 
         /// <summary>
@@ -132,23 +108,11 @@ namespace codesetTest.Tests
         [TestMethod]
         public void InstallAllExtensionsNullTest()
         {
-            bool caughtException = false;
-            
-            try
+            Assert.ThrowsException<ArgumentNullException>(() =>
             {
                 CodeWrapper code = new CodeWrapper();
                 code.InstallAllExtensions(null);
-            }
-            catch (ArgumentNullException)
-            {
-                caughtException = true;
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-
-            Assert.IsTrue(caughtException);
+            });
         }
 
         /// <summary>
@@ -166,23 +130,11 @@ namespace codesetTest.Tests
         [TestMethod]
         public void UninstallExtensionNullTest()
         {
-            bool caughtException = false;
-
-            try
+            Assert.ThrowsException<ArgumentNullException>(() =>
             {
                 CodeWrapper code = new CodeWrapper();
                 code.UninstallExtension(null);
-            }
-            catch (ArgumentNullException)
-            {
-                caughtException = true;
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-
-            Assert.IsTrue(caughtException);
+            });
         }
 
         /// <summary>
@@ -200,23 +152,11 @@ namespace codesetTest.Tests
         [TestMethod]
         public void UninstallExtensionEmptyTest()
         {
-            bool caughtException = false;
-
-            try
+            Assert.ThrowsException<ArgumentException>(() =>
             {
                 CodeWrapper code = new CodeWrapper();
                 code.UninstallExtension("");
-            }
-            catch (ArgumentException)
-            {
-                caughtException = true;
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-
-            Assert.IsTrue(caughtException);
+            });
         }
 
         // TODO: Add tests for UpdateSettings()

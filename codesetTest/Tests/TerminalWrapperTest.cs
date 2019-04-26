@@ -24,23 +24,11 @@ namespace codesetTest.Tests
         [TestMethod]
         public void ExecuteNullTest()
         {
-            bool caughtException = false;
-
-            try
+            Assert.ThrowsException<ArgumentNullException>(() =>
             {
                 TerminalWrapper terminal = new TerminalWrapper();
                 terminal.Execute(null);
-            }
-            catch (ArgumentNullException)
-            {
-                caughtException = true;
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-
-            Assert.IsTrue(caughtException);
+            });
         }
 
         /// <summary>

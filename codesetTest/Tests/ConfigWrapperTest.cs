@@ -27,22 +27,8 @@ namespace codesetTest.Tests
         [TestMethod]
         public void ConstructorEmptyTest()
         {
-            bool caughtException = false;
-
-            try
-            {
-                ConfigWrapper wrapper = new ConfigWrapper("");
-            }
-            catch (ArgumentException)
-            {
-                caughtException = true;
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-
-            Assert.IsTrue(caughtException);
+            Assert.ThrowsException<ArgumentException>(() =>
+                new ConfigWrapper(""));
         }
 
         /// <summary>

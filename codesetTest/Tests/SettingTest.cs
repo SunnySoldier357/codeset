@@ -26,22 +26,8 @@ namespace codesetTest.Tests
         [TestMethod]
         public void ConstructorNullLinesTest()
         {
-            bool caughtException = false;
-
-            try
-            {
-                Setting setting = new Setting(null);
-            }
-            catch (ArgumentNullException)
-            {
-                caughtException = true;
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-
-            Assert.IsTrue(caughtException);
+            Assert.ThrowsException<ArgumentNullException>(() =>
+                new Setting(null));
         }
 
         /// <summary>
