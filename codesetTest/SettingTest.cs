@@ -1,6 +1,6 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
-using System;
 
 using codeset.Models;
 using static codeset.Models.Utility;
@@ -186,6 +186,9 @@ namespace codesetTest
 
             createAndTestSetting(setting, "testKey", null, "testInstruction");
         }
+
+        // TODO: Create a test to test for different OS Values where the value is
+        // TODO: a JObject.
 
         //* Private Methods
 

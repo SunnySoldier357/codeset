@@ -1,5 +1,5 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using codeset.Models;
 
@@ -218,5 +218,7 @@ namespace codesetTest
 
             Assert.IsTrue(caughtException);
         }
+
+        // TODO: Add tests for UpdateSettings()
     }
 }

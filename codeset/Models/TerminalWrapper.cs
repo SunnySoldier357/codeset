@@ -7,7 +7,7 @@ namespace codeset.Models
         //* Private Properties
         private Process process;
 
-        //* Constructors & Destructors
+        //* Constructor
         public TerminalWrapper()
         {
             process = new Process();
@@ -19,6 +19,7 @@ namespace codeset.Models
             process.StartInfo.UseShellExecute = false;
         }
 
+        //* Destructor
         ~TerminalWrapper() =>
             process.WaitForExit();
 

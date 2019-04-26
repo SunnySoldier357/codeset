@@ -7,6 +7,7 @@ using static codeset.Models.Utility;
 
 namespace codesetTest
 {
+    // TODO: Either make this a partial class or somehow extend codeset's Utility.cs
     public static class Utility
     {
         /// <summary>

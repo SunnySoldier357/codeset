@@ -10,7 +10,6 @@ namespace codeset.Models
         private TerminalWrapper terminal = new TerminalWrapper();
 
         //* Public Methods
-
         public List<string> GetExtensions()
         {
             var extensions = new List<string>();
