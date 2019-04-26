@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 using codeset.Models;
 using static codeset.Models.Utility;
 
-namespace codesetTest
+namespace codesetTest.Tests
 {
     [TestClass]
     public class SettingTest

@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 using codeset.Models;
 using static codesetTest.Utility;
 
-namespace codesetTest
+namespace codesetTest.Tests
 {
     [TestClass]
     public class ConfigWrapperTest

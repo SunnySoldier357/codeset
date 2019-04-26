@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using codeset.Models;
 
-namespace codesetTest
+namespace codesetTest.Tests
 {
     [TestClass]
     public class CodeWrapperTest
