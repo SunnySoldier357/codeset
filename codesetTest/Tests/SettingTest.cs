@@ -37,10 +37,12 @@ namespace codesetTest.Tests
         /// </para>
         /// <para>
         /// Input:
+        /// <code>
         /// {
         ///     "key": "testKey",
         ///     "value": "testValue"
         /// }
+        /// </code>
         /// </para>
         /// <para>
         /// Expected Output: Key: "testKey", Value: "testValue", Instruction: null
@@ -66,6 +68,7 @@ namespace codesetTest.Tests
         /// </para>
         /// <para>
         /// Input:
+        /// <code>
         /// {
         ///     "key": "testKey",
         ///     "value": [
@@ -73,6 +76,7 @@ namespace codesetTest.Tests
         ///         "item2"
         ///     ]
         /// }
+        /// </code>
         /// </para>
         /// <para>
         /// Expected Output: Key: "testKey", Value: JArray with 2 items (item1
@@ -101,9 +105,10 @@ namespace codesetTest.Tests
         /// <para>
         /// Tests if the Setting class constructor can handle a value that is a
         /// JObject itself.
-        /// <para>
+        /// </para>
         /// <para>
         /// Input:
+        /// <code>
         /// {
         ///     "key": "testKey",
         ///     "value": {
@@ -111,6 +116,7 @@ namespace codesetTest.Tests
         ///         "another": "value 2"
         ///     }
         /// }
+        /// </code>
         /// </para>
         /// <para>
         /// Expected Output: Key: "testKey", Value: JObject with 2 keys ("test"
@@ -143,6 +149,7 @@ namespace codesetTest.Tests
         /// </para>
         /// <para>
         /// Input:
+        /// <code>
         /// {
         ///     "key": "testKey",
         ///     "value": {
@@ -151,6 +158,7 @@ namespace codesetTest.Tests
         ///         "linux": "manjaro"
         ///     }
         /// }
+        /// </code>
         /// </para>
         /// <para>
         /// Expected Output: Key: "testKey", Value (Windows): "windows", Value (OSX):
@@ -189,11 +197,13 @@ namespace codesetTest.Tests
         /// </para>
         /// <para>
         /// Input:
+        /// <code>
         /// {
         ///     "key": "testKey",
         ///     "value": "testValue",
         ///     "instruction": "testInstruction"
         /// }
+        /// </code>
         /// </para>
         /// <para>
         /// Expected Output: Key: "testKey", Value: null, Instruction: "testInstruction"

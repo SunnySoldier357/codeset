@@ -55,11 +55,9 @@ namespace codesetTest.Tests
         }
 
         /// <summary>
-        /// <para>
         /// Tests if the InstallExtension() method can correctly install a
         /// particular extension, then tests if the UninstallExtension() method
         /// can correctly uninstall that extension.
-        /// </para>
         /// </summary>
         [TestMethod]
         public void InstallAndUninstallExtensionTest()

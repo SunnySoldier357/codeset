@@ -39,12 +39,14 @@ namespace codesetTest.Tests
         /// </para>
         /// <para>
         /// config.json:
+        /// <code>
         /// {
         ///     "categories": [
         ///         "Category 1",
         ///         "Category 2"
         ///     ]
         /// }
+        /// </code>
         /// </para>
         /// <para>
         /// Expected Output: A List with 3 categories - "Required", "Category 1",
@@ -98,6 +100,7 @@ namespace codesetTest.Tests
         /// </para>
         /// <para>
         /// config.json:
+        /// <code>
         /// {
         ///     "extensions": {
         ///         "Required": [
@@ -110,6 +113,7 @@ namespace codesetTest.Tests
         ///         ]
         ///     }
         /// }
+        /// </code>
         /// </para>
         /// <para>
         /// Expected Output: Required and C# as keys and items 1-4 as values in
@@ -155,12 +159,15 @@ namespace codesetTest.Tests
         /// </para>
         /// <para>
         /// config.json:
+        /// <code>
         /// {
         ///     "extensions": "path to extensions.json"
         /// }
+        /// </code>
         /// </para>
         /// <para>
         /// extensions.json:
+        /// <code>
         /// {
         ///     "Required": [
         ///         "item 1",
@@ -171,6 +178,7 @@ namespace codesetTest.Tests
         ///         "item 4"
         ///     ]
         /// }
+        /// </code>
         /// </para>
         /// <para>
         /// Expected Output: Required and C# as keys and items 1-4 as values in
@@ -221,6 +229,7 @@ namespace codesetTest.Tests
         /// </para>
         /// <para>
         /// config.json:
+        /// <code>
         /// {
         ///     "settings": {
         ///         "Required": [
@@ -245,6 +254,7 @@ namespace codesetTest.Tests
         ///         ]
         ///     }
         /// }
+        /// </code>
         /// </para>
         /// <para>
         /// Expected Output: Required and C# as keys and value 1-4 as values in
@@ -290,12 +300,15 @@ namespace codesetTest.Tests
         /// </para>
         /// <para>
         /// Input:
+        /// <code>
         /// {
         ///     "settings": "path to settings.json"
         /// }
+        /// </code>
         /// </para>
         /// <para>
         /// settings.json:
+        /// <code>
         /// {
         ///     "Required": [
         ///         {
@@ -318,6 +331,7 @@ namespace codesetTest.Tests
         ///         }
         ///     ]
         /// }
+        /// </code>
         /// </para>
         /// <para>
         /// Expected Output: Required and C# as keys and value 1-4 as values in
