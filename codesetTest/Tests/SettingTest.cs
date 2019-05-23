@@ -24,7 +24,7 @@ namespace codesetTest.Tests
         /// </para>
         /// </summary>
         [TestMethod]
-        public void ConstructorNullLinesTest()
+        public void ConstructorNullTest()
         {
             Assert.ThrowsException<ArgumentNullException>(() =>
                 new Setting(null));
@@ -47,7 +47,7 @@ namespace codesetTest.Tests
         /// </para>
         /// </summary>
         [TestMethod]
-        public void ConstructorSimpleLinesTest()
+        public void ConstructorSimpleTest()
         {
             JObject setting = JObject.FromObject(new
             {
@@ -80,12 +80,51 @@ namespace codesetTest.Tests
         /// </para>
         /// </summary>
         [TestMethod]
-        public void ConstructorMultiLinesTest()
+        public void ConstructorValueArrayTest()
         {
-            JArray value = new JArray(new string[]
+            JArray value = JArray.FromObject(new string[]
             {
                 "item1",
                 "item2"
+            });
+
+            JObject setting = JObject.FromObject(new
+            {
+                key = "testKey",
+                value
+            });
+
+            createAndTestSetting(setting, "testKey", value, null);
+        }
+
+        /// <summary>
+        /// <para>
+        /// Tests if the Setting class constructor can handle a value that is a
+        /// JObject itself.
+        /// <para>
+        /// <para>
+        /// Input:
+        /// {
+        ///     "key": "testKey",
+        ///     "value": {
+        ///         "test": "value 1",
+        ///         "another": "value 2"
+        ///     }
+        /// }
+        /// </para>
+        /// <para>
+        /// Expected Output: Key: "testKey", Value: JObject with 2 keys ("test"
+        /// and "another") and their respective values ("value 1" and "value 2"),
+        /// Instruction: null
+        /// </para>
+        /// </summary>
+        [TestMethod]
+        public void ConstructorValueObjectTest()
+        {
+            JObject value = JObject.FromObject(new
+            {
+                test = "value 1",
+                another = "value 2"
             });
 
             JObject setting = JObject.FromObject(new
@@ -119,7 +158,7 @@ namespace codesetTest.Tests
         /// </para>
         /// </summary>
         [TestMethod]
-        public void ConstructorOSLinesTest()
+        public void ConstructorValueOSTest()
         {
             JObject setting = JObject.FromObject(new
             {
@@ -161,7 +200,7 @@ namespace codesetTest.Tests
         /// </para>
         /// </summary>
         [TestMethod]
-        public void ConstructorInstructionLinesTest()
+        public void ConstructorInstructionTest()
         {
             JObject setting = JObject.FromObject(new
             {
