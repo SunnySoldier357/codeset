@@ -42,10 +42,7 @@ namespace codeset.Models
             string result = terminal.Execute(string.Format(
                 "code --install-extension {0}", extension));;
 
-            // If the string ends in "successfully installed!" or "already installed."
-            if (!(result.Substring(result.Length - 23) == "successfully installed!" ||
-                result.Substring(result.Length - 18) == "already installed."))
-                throw new ArgumentException(nameof(extension));
+            // TODO: Find a way to check for the success of the command.
         }
 
         public void InstallAllExtensions(ConfigWrapper wrapper)
