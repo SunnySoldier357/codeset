@@ -1,10 +1,16 @@
 using System;
+
 using Newtonsoft.Json.Linq;
+
+using codeset.Services;
 
 namespace codeset.Models
 {
     public class Setting
     {
+        //* Private Properties
+        private readonly IPlatformService platformService;
+
         //* Public Properties
         public string Instruction { get; }
         public string Key { get; }
@@ -22,19 +28,19 @@ namespace codeset.Models
 
                 if (Value.Type != JTokenType.Object)
                     result = Value;
-                else if (Utility.IsOsWindows())
+                else if (platformService.IsOsWindows())
                 {
                     var temp = Value["windows"];
                     if (temp != null)
                         result = temp;
                 }
-                else if (Utility.IsOsOsx())
+                else if (platformService.IsOsOsx())
                 {
                     var temp = Value["osx"];
                     if (temp != null)
                         result = temp;
                 }
-                else if (Utility.IsOsLinux())
+                else if (platformService.IsOsLinux())
                 {
                     var temp = Value["linux"];
                     if (temp != null)
@@ -46,8 +52,10 @@ namespace codeset.Models
         }
 
         //* Constructors
-        public Setting(JObject setting)
+        public Setting(JObject setting, IPlatformService platformService)
         {
+            this.platformService = platformService;
+
             if (setting == null)
                 throw new ArgumentNullException(nameof(setting));
 
@@ -72,5 +80,9 @@ namespace codeset.Models
 
             return false;
         }
+
+        public override int GetHashCode() =>
+            Instruction?.GetHashCode() + Key?.GetHashCode() +
+                Value?.GetHashCode() ?? 0;
     }
 }

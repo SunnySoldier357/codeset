@@ -1,18 +1,28 @@
-﻿using CommandLine;
-
-using codeset.Models;
+﻿using Autofac;
 
 namespace codeset
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        //* Public Methods
+        public static void Main(string[] args)
         {
-            CommandHandler cmdHandler = new CommandHandler();
+            var container = ConfigureContainer();
 
-            var parsed = Parser.Default
-                .ParseArguments<Options>(args)
-                .WithParsed(options => cmdHandler.HandleCommand(options));
+            using (var scope = container.BeginLifetimeScope())
+            {
+                var app = scope.Resolve<IApplication>();
+                app.Run(args);
+            }
+        }
+
+        public static IContainer ConfigureContainer()
+        {
+            var builder = new ContainerBuilder();
+
+            builder.RegisterType<Application>().As<IApplication>();
+
+            return builder.Build();
         }
     }
 }

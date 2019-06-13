@@ -2,19 +2,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace codeset.Wrappers
+namespace codeset.Services.Wrappers
 {
-    public class VsCodeWrapper
+    public class VsCodeWrapper : IVsCodeWrapper
     {
         //* Private Properties
-        private TerminalWrapper terminal = new TerminalWrapper();
+        private readonly IConfigWrapper configWrapper;
+
+        private readonly ITerminalWrapper terminalWrapper;
+
+        //* Constructors
+        public VsCodeWrapper(IConfigWrapper configWrapper, ITerminalWrapper terminalWrapper)
+        {
+            this.configWrapper = configWrapper;
+            this.terminalWrapper = terminalWrapper;
+        }
 
         //* Public Methods
         public List<string> GetExtensions()
         {
             var extensions = new List<string>();
 
-            string result = terminal.Execute("code --list-extensions");
+            string result = terminalWrapper.Execute("code --list-extensions");
 
             foreach (string extension in result.Split('\n'))
                 extensions.Add(extension.Trim().ToLower());
@@ -39,18 +48,26 @@ namespace codeset.Wrappers
             if (string.IsNullOrWhiteSpace(extension))
                 throw new ArgumentException(nameof(extension));
 
-            string result = terminal.Execute(string.Format(
+            string result = terminalWrapper.Execute(string.Format(
                 "code --install-extension {0}", extension));;
 
             // TODO: Find a way to check for the success of the command.
         }
 
-        public void InstallAllExtensions(ConfigWrapper wrapper)
+        public void UninstallExtension(string extension)
         {
-            if (wrapper == null)
-                throw new ArgumentNullException(nameof(wrapper));
+            if (extension == null)
+                throw new ArgumentNullException(nameof(extension));
 
-            var extensions = wrapper.Extensions;
+            string result = terminalWrapper.Execute(string.Format("code --uninstall-extension {0}", extension));
+        }
+
+        public void UpdateExtensions()
+        {
+            if (configWrapper == null)
+                throw new ArgumentNullException(nameof(configWrapper));
+
+            var extensions = configWrapper.Extensions;
             // Extension that are going to be installed, not including those
             // that should be installed but are already installed
             var extensionsToInstall = new List<string>();
@@ -60,7 +77,7 @@ namespace codeset.Wrappers
 
             foreach (var group in extensions)
             {
-                if (wrapper.Categories.Contains(group.Key))
+                if (configWrapper.Categories.Contains(group.Key))
                 {
                     foreach (var extension in group.Value)
                     {
@@ -119,15 +136,7 @@ namespace codeset.Wrappers
                 Console.WriteLine("All Required extensions are already installed.");
         }
 
-        public void UninstallExtension(string extension)
-        {
-            if (extension == null)
-                throw new ArgumentNullException(nameof(extension));
-
-            string result = terminal.Execute(string.Format("code --uninstall-extension {0}", extension));
-        }
-
-        public void UpdateSettings(ConfigWrapper wrapper)
+        public void UpdateSettings()
         {
             
         }

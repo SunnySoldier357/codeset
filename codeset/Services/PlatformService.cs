@@ -1,14 +1,14 @@
 using System.Runtime.InteropServices;
 
-namespace codeset.Models
+namespace codeset.Services
 {
-    public static class Utility
+    public class PlatformService : IPlatformService
     {
         //* Private Static Properties
-        private static OSPlatform? currentOs = null;
+        private OSPlatform? currentOs = null;
 
         //* Public Static Properties
-        public static OSPlatform CurrentOs
+        public OSPlatform CurrentOs
         {
             get
             {
@@ -27,8 +27,8 @@ namespace codeset.Models
         }
 
         //* Public Static Methods
-        public static bool IsOsLinux() => CurrentOs.Equals(OSPlatform.Linux);
-        public static bool IsOsOsx() => CurrentOs.Equals(OSPlatform.OSX);
-        public static bool IsOsWindows() => CurrentOs.Equals(OSPlatform.Windows);
+        public bool IsOsLinux() => CurrentOs.Equals(OSPlatform.Linux);
+        public bool IsOsOsx() => CurrentOs.Equals(OSPlatform.OSX);
+        public bool IsOsWindows() => CurrentOs.Equals(OSPlatform.Windows);
     }
 }

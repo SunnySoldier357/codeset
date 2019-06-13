@@ -1,53 +1,31 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using codeset.Models;
 
-namespace codeset.Wrappers
+namespace codeset.Services.Wrappers
 {
-    public class ConfigWrapper
+    public class ConfigWrapper : IConfigWrapper
     {
-        //* Private Static Properties
-        private static string configPath = null;
+        //* Private Properties
+        private readonly IPlatformService platformService;
 
-        //* Public Static Properties
-        public static string ConfigPath
-        {
-            get
-            {
-                if (configPath == null)
-                {
-                    string path = Environment.GetEnvironmentVariable("HOME");
-
-                    DirectoryInfo dir = new DirectoryInfo(path);
-
-                    dir = dir.GetDirectories().FirstOrDefault(d => d.Name == ".config");
-                    dir = dir.GetDirectories().FirstOrDefault(d => d.Name == "codeset");
-                    var configFile = dir.GetFiles().FirstOrDefault(f => f.Name == "config.json");
-
-                    configPath = configFile.FullName;
-                }
-                
-                return configPath;
-            }
-        }
+        private readonly ISettingsService settingsService;
 
         //* Public Properties
-        public Dictionary<string, List<string>> Extensions { get; private set; }
-        public Dictionary<string, List<Setting>> Settings { get; private set; }
+        public Dictionary<string, List<string>> Extensions { get; }
+        public Dictionary<string, List<Setting>> Settings { get; }
 
-        public List<string> Categories { get; private set; }
+        public List<string> Categories { get; }
 
         //* Constructor
-        public ConfigWrapper(string path = null)
+        public ConfigWrapper(IPlatformService platformService, ISettingsService settingsService)
         {
-            // Used for testing
-            if (path == null)
-                path = ConfigPath;
+            this.platformService = platformService;
+            this.settingsService = settingsService;
 
             JToken categoriesJson = null;
             JToken extensionsJson = null;
@@ -57,7 +35,7 @@ namespace codeset.Wrappers
             JObject settings = null;
 
             using (StreamReader stream = new StreamReader(
-                new FileStream(path, FileMode.Open)))
+                new FileStream(this.settingsService.ConfigPath, FileMode.Open)))
             {
                 JObject configFile = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
 
@@ -78,14 +56,14 @@ namespace codeset.Wrappers
             else
             {
                 if (extensionsJson is JObject)
-                    extensions = (JObject)extensionsJson;
+                    extensions = (JObject) extensionsJson;
                 else
                 {
                     // Get the JSON file at that path and set extensions to that
                     using (StreamReader stream = new StreamReader(
                         new FileStream(extensionsJson.ToString(), FileMode.Open)))
                     {
-                        extensions = (JObject)JToken.ReadFrom(new JsonTextReader(stream));
+                        extensions = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
                     }
                 }
 
@@ -97,14 +75,14 @@ namespace codeset.Wrappers
             else
             {
                 if (settingsJson is JObject)
-                    settings = (JObject)settingsJson;
+                    settings = (JObject) settingsJson;
                 else
                 {
                     // Get the JSON file at that path and set extensions to that
                     using (StreamReader stream = new StreamReader(
                         new FileStream(settingsJson.ToString(), FileMode.Open)))
                     {
-                        settings = (JObject)JToken.ReadFrom(new JsonTextReader(stream));
+                        settings = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
                     }
                 }
 
@@ -155,7 +133,7 @@ namespace codeset.Wrappers
 
                 foreach (JToken value in (JArray) category.Value)
                 {
-                    Setting temp = new Setting((JObject) value);
+                    Setting temp = new Setting((JObject) value, platformService);
                     values.Add(temp);
                 }
 

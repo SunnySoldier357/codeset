@@ -1,19 +1,22 @@
 using System;
 using System.Diagnostics;
-using codeset.Models;
 
-namespace codeset.Wrappers
+namespace codeset.Services.Wrappers
 {
-    public class TerminalWrapper
+    public class TerminalWrapper : ITerminalWrapper
     {
         //* Private Properties
+        private readonly IPlatformService platformService;
+
         private Process process;
 
         //* Constructor
-        public TerminalWrapper()
+        public TerminalWrapper(IPlatformService platformService)
         {
+            this.platformService = platformService;
+
             process = new Process();
-            process.StartInfo.FileName = Utility.IsOsWindows() ? "cmd" : "bash";
+            process.StartInfo.FileName = this.platformService.IsOsWindows() ? "cmd" : "bash";
             process.StartInfo.RedirectStandardInput = true;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
