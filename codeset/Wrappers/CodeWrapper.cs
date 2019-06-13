@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace codeset.Models
+namespace codeset.Wrappers
 {
-    public class CodeWrapper
+    public class VsCodeWrapper
     {
         //* Private Properties
         private TerminalWrapper terminal = new TerminalWrapper();

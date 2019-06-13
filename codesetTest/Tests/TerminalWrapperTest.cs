@@ -2,6 +2,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using codeset.Models;
+using codeset.Wrappers;
 
 namespace codesetTest.Tests
 {

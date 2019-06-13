@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 
 using codeset.Models;
+using codeset.Wrappers;
 using static codesetTest.Utility;
 
 namespace codesetTest.Tests

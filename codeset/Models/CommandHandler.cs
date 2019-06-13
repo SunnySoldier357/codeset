@@ -1,3 +1,5 @@
+using codeset.Wrappers;
+
 namespace codeset.Models
 {
     public class CommandHandler
@@ -7,12 +9,12 @@ namespace codeset.Models
         {
             if (options.UpdateExtension)
             {
-                CodeWrapper code = new CodeWrapper();
+                VsCodeWrapper code = new VsCodeWrapper();
                 code.InstallAllExtensions(new ConfigWrapper());
             }
             else if (options.UpdateSettings)
             {
-                CodeWrapper code = new CodeWrapper();
+                VsCodeWrapper code = new VsCodeWrapper();
                 code.UpdateSettings(new ConfigWrapper());
             }
 

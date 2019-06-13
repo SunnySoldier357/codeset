@@ -5,7 +5,9 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace codeset.Models
+using codeset.Models;
+
+namespace codeset.Wrappers
 {
     public class ConfigWrapper
     {

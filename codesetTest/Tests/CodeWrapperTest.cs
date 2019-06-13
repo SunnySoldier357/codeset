@@ -2,11 +2,12 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using codeset.Models;
+using codeset.Wrappers;
 
 namespace codesetTest.Tests
 {
     [TestClass]
-    public class CodeWrapperTest
+    public class VsCodeWrapperTest
     {
         //* Test Methods
 
@@ -27,7 +28,7 @@ namespace codesetTest.Tests
         {
             Assert.ThrowsException<ArgumentNullException>(() =>
             {
-                CodeWrapper code = new CodeWrapper();
+                VsCodeWrapper code = new VsCodeWrapper();
                 code.InstallExtension(null);
             });
         }
@@ -49,7 +50,7 @@ namespace codesetTest.Tests
         {
             Assert.ThrowsException<ArgumentException>(() =>
             {
-                CodeWrapper code = new CodeWrapper();
+                VsCodeWrapper code = new VsCodeWrapper();
                 code.InstallExtension("");
             });
         }
@@ -66,7 +67,7 @@ namespace codesetTest.Tests
 
             try
             {
-                CodeWrapper code = new CodeWrapper();
+                VsCodeWrapper code = new VsCodeWrapper();
 
                 var extensions = code.GetExtensions();
 
@@ -108,7 +109,7 @@ namespace codesetTest.Tests
         {
             Assert.ThrowsException<ArgumentNullException>(() =>
             {
-                CodeWrapper code = new CodeWrapper();
+                VsCodeWrapper code = new VsCodeWrapper();
                 code.InstallAllExtensions(null);
             });
         }
@@ -130,7 +131,7 @@ namespace codesetTest.Tests
         {
             Assert.ThrowsException<ArgumentNullException>(() =>
             {
-                CodeWrapper code = new CodeWrapper();
+                VsCodeWrapper code = new VsCodeWrapper();
                 code.UninstallExtension(null);
             });
         }
@@ -152,7 +153,7 @@ namespace codesetTest.Tests
         {
             Assert.ThrowsException<ArgumentException>(() =>
             {
-                CodeWrapper code = new CodeWrapper();
+                VsCodeWrapper code = new VsCodeWrapper();
                 code.UninstallExtension("");
             });
         }
