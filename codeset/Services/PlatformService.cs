@@ -4,10 +4,10 @@ namespace codeset.Services
 {
     public class PlatformService : IPlatformService
     {
-        //* Private Static Properties
+        //* Private Properties
         private OSPlatform? currentOs = null;
 
-        //* Public Static Properties
+        //* Public Properties
         public OSPlatform CurrentOs
         {
             get
@@ -26,7 +26,7 @@ namespace codeset.Services
             }
         }
 
-        //* Public Static Methods
+        //* Public Methods
         public bool IsOsLinux() => CurrentOs.Equals(OSPlatform.Linux);
         public bool IsOsOsx() => CurrentOs.Equals(OSPlatform.OSX);
         public bool IsOsWindows() => CurrentOs.Equals(OSPlatform.Windows);
