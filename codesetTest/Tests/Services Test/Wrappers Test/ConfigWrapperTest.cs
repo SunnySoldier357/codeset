@@ -1,35 +1,35 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Newtonsoft.Json.Linq;
 
 using codeset.Models;
-using codeset.Wrappers;
-using static codesetTest.Utility;
+using codeset.Services;
+using codeset.Services.Wrappers;
 
-namespace codesetTest.Tests
+using codesetTest.Utilities;
+
+namespace codesetTest.Tests.ServicesTest.WrappersTest
 {
     [TestClass]
     public class ConfigWrapperTest
     {
         //* Test Methods
 
-        /// <summary>
-        /// <para>
-        /// Tests if the Constructor can correctly handle empty path.
-        /// </para>
-        /// <para>
-        /// Input: "" for path
-        /// </para>
-        /// <para>
-        /// Expected Output: ArgumentException thrown
-        /// </para>
-        /// </summary>
         [TestMethod]
-        public void ConstructorEmptyTest()
+        [ExpectedException(typeof(ArgumentException))]
+        public void EmptyFilePathTest()
         {
-            Assert.ThrowsException<ArgumentException>(() =>
-                new ConfigWrapper(""));
+            // Arrange
+            var platformService = new MockPlatformService(OSPlatform.Linux);
+            var settingsService = new MockSettingsService("");
+            
+            // Act
+            var configWrapper = new ConfigWrapper(platformService, settingsService);
         }
 
         /// <summary>
@@ -55,42 +55,41 @@ namespace codesetTest.Tests
         /// </para>
         /// </summary>
         [TestMethod]
-        public void ConstructorOneFileCategoriesTest()
+        public void OneFileCategoriesTest()
         {
+            // Arrange
             string fileName = "config";
 
-            JArray categories = JArray.FromObject(new string[]
+            var categories = new List<string>
             {
                 "Category 1",
                 "Category 2"
-            });
+            };
 
             JObject config = JObject.FromObject(new
             {
                 categories
             });
 
-            string path = CreateFile(fileName, "json",
+            string path = FileUtility.CreateFile(fileName, FileExtension.Json,
                 config.ToString().Split('\n'));
 
-            try
-            {
-                ConfigWrapper wrapper = new ConfigWrapper(path);
-                var result = wrapper.Categories;
+            var platformService = new MockPlatformService(OSPlatform.Linux);
+            var settingsService = new MockSettingsService(path);
 
-                Assert.IsTrue(result.Contains("Required"));
+            // Act
+            var configWrapper = new ConfigWrapper(platformService, settingsService);
 
-                for (int i = 0; i < 2; i++)
-                    Assert.IsTrue(result.Contains(categories[i].ToString()));
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-            finally
-            {
-                DeleteFile(fileName, "json");
-            }
+            // Assert
+            var result = configWrapper.Categories
+                .Where(c => c != "Required")
+                .ToList();
+
+            CollectionAssert.AreEquivalent(categories, result);
+            CollectionAssert.Contains(configWrapper.Categories, "Required");
+
+            // Cleanup
+            FileUtility.DeleteFile(fileName, FileExtension.Json);
         }
 
         /// <summary>
@@ -122,44 +121,45 @@ namespace codesetTest.Tests
         /// </para>
         /// </summary>
         [TestMethod]
-        public void ConstructorOneFileExtensionTest()
+        public void OneFileExtensionTest()
         {
+            // Arrange
             string fileName = "config";
 
-            JObject extensions = createExtensionJObject();
+            var extensions = createExtensions();
 
             JObject config = JObject.FromObject(new
             {
                 extensions
             });
 
-            string path = CreateFile(fileName, "json",
+            string path = FileUtility.CreateFile(fileName, FileExtension.Json,
                 config.ToString().Split('\n'));
-            
-            try
-            {
-                ConfigWrapper wrapper = new ConfigWrapper(path);
 
-                testExtensions(extensions, wrapper.Extensions);
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-            finally
-            {
-                DeleteFile(fileName, "json");
-            }
+            var platformService = new MockPlatformService(OSPlatform.Linux);
+            var settingsService = new MockSettingsService(path);
+
+            // Act
+            var configWrapper = new ConfigWrapper(platformService, settingsService);
+
+            // Assert
+            CollectionAssert.AreEquivalent(extensions.Keys, configWrapper.Extensions.Keys);
+            CollectionAssert.AreEquivalent(extensions["Required"],
+                configWrapper.Extensions["Required"]);
+            CollectionAssert.AreEquivalent(extensions["C#"],
+                configWrapper.Extensions["C#"]);
+
+            // Cleanup
+            FileUtility.DeleteFile(fileName, FileExtension.Json);
         }
 
         /// <summary>
         /// <para>
         /// Tests the algorithm of the Constructor to ensure it can correctly
-        /// use the config file at the path to create a Dictionary for the
-        /// extensions.
+        /// turn config file at the path into a Dictionary for the extensions.
         /// </para>
         /// <para>
-        /// config.json:
+        /// Input:
         /// <code>
         /// {
         ///     "extensions": "path to extensions.json"
@@ -187,39 +187,43 @@ namespace codesetTest.Tests
         /// </para>
         /// </summary>
         [TestMethod]
-        public void ConstructorDifferentFileExtensionTest()
+        public void DifferentFileExtensionTest()
         {
+            // Arrange
             string configFileName = "config";
             string extensionsFileName = "extensions";
 
-            JObject extensions = createExtensionJObject();
+            var extensions = createExtensions();
 
-            string extensionsPath = CreateFile(extensionsFileName, "json",
-                extensions.ToString().Split('\n'));
+            JObject extensionsJson = JObject.FromObject(extensions);
+
+            string extensionsPath = FileUtility.CreateFile(extensionsFileName,
+                FileExtension.Json, extensionsJson.ToString().Split('\n'));
 
             JObject config = JObject.FromObject(new
             {
                 extensions = extensionsPath
             });
 
-            string configPath = CreateFile(configFileName, "json",
-                config.ToString().Split('\n'));
-            
-            try
-            {
-                ConfigWrapper wrapper = new ConfigWrapper(configPath);
+            string configPath = FileUtility.CreateFile(configFileName,
+                FileExtension.Json, config.ToString().Split('\n'));
 
-                testExtensions(extensions, wrapper.Extensions);
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-            finally
-            {
-                DeleteFile(configFileName, "json");
-                DeleteFile(extensionsFileName, "json");
-            }
+            var platformService = new MockPlatformService(OSPlatform.Linux);
+            var settingsService = new MockSettingsService(configPath);
+
+            // Act
+            var configWrapper = new ConfigWrapper(platformService, settingsService);
+
+            // Assert
+            CollectionAssert.AreEquivalent(extensions.Keys, configWrapper.Extensions.Keys);
+            CollectionAssert.AreEquivalent(extensions["Required"],
+                configWrapper.Extensions["Required"]);
+            CollectionAssert.AreEquivalent(extensions["C#"],
+                configWrapper.Extensions["C#"]);
+
+            // Cleanup
+            FileUtility.DeleteFile(configFileName, FileExtension.Json);
+            FileUtility.DeleteFile(extensionsFileName, FileExtension.Json);
         }
 
         /// <summary>
@@ -265,6 +269,7 @@ namespace codesetTest.Tests
         [TestMethod]
         public void ConstructorOneFileSettingTest()
         {
+            // Arrange
             string fileName = "config";
 
             JObject settings = createSettingJObject();
@@ -274,23 +279,20 @@ namespace codesetTest.Tests
                 settings
             });
 
-            string path = CreateFile(fileName, "json",
+            string path = FileUtility.CreateFile(fileName, FileExtension.Json,
                 config.ToString().Split('\n'));
 
-            try
-            {
-                ConfigWrapper wrapper = new ConfigWrapper(path);
+            var platformService = new MockPlatformService(OSPlatform.Linux);
+            var settingsService = new MockSettingsService(path);
 
-                testSettings(settings, wrapper.Settings);
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-            finally
-            {
-                DeleteFile(fileName, "json");
-            }
+            // Act
+            var configWrapper = new ConfigWrapper(platformService, settingsService);
+
+            // Assert
+            testSettings(settings, configWrapper.Settings, platformService);
+
+            // Cleanup
+            FileUtility.DeleteFile(fileName, FileExtension.Json);
         }
 
         /// <summary>
@@ -342,124 +344,103 @@ namespace codesetTest.Tests
         [TestMethod]
         public void ConstructorDifferentFileSettingTest()
         {
+            // Arrange
             string configFileName = "config";
             string settingsFileName = "settings";
 
             JObject settings = createSettingJObject();
 
-            string settingsPath = CreateFile(settingsFileName, "json",
-                settings.ToString().Split('\n'));
+            string settingsPath = FileUtility.CreateFile(settingsFileName,
+                FileExtension.Json, settings.ToString().Split('\n'));
 
             JObject config = JObject.FromObject(new
             {
                 settings = settingsPath
             });
 
-            string configPath = CreateFile(configFileName, "json",
-                config.ToString().Split('\n'));
+            string configPath = FileUtility.CreateFile(configFileName,
+                FileExtension.Json, config.ToString().Split('\n'));
 
-            try
-            {
-                ConfigWrapper wrapper = new ConfigWrapper(configPath);
+            var platformService = new MockPlatformService(OSPlatform.Linux);
+            var settingsService = new MockSettingsService(configPath);
 
-                testSettings(settings, wrapper.Settings);
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
-            finally
-            {
-                DeleteFile(configFileName, "json");
-                DeleteFile(settingsFileName, "json");
-            }
+            // Act
+            var configWrapper = new ConfigWrapper(platformService, settingsService);
+
+            // Assert
+            testSettings(settings, configWrapper.Settings, platformService);
+
+            // Cleanup
+            FileUtility.DeleteFile(configFileName, FileExtension.Json);
+            FileUtility.DeleteFile(settingsFileName, FileExtension.Json);
         }
-        
+
         //* Private Methods
-        private JObject createExtensionJObject()
+        private Dictionary<string, List<string>> createExtensions()
         {
-            JObject extensions = JObject.FromObject(new
+            return new Dictionary<string, List<string>>
             {
-                Required = new string[]
                 {
-                    "item 1",
-                    "item 2"
+                    "Required",
+                    new List<string>
+                    {
+                        "item 1",
+                        "item 2"
+                    }
+                },
+                {
+                    "C#",
+                    new List<string>
+                    {
+                        "item 3",
+                        "item 4"
+                    }
                 }
-            });
-
-            extensions.Add(new JProperty("C#", new string[]
-            {
-                "item 3",
-                "item 4"
-            }));
-
-            return extensions;
+            };
         }
 
         private JObject createSettingJObject()
         {
-            JObject settings = JObject.FromObject(new
+            return JObject.FromObject(new Dictionary<string, dynamic>
             {
-                Required = new[]
                 {
-                    new
+                    "Required",
+                    new[]
                     {
-                        key = "key 1",
-                        value = "value 1"
-                    },
-                    new
+                        new
+                        {
+                            key = "key 1",
+                            value = "value 1"
+                        },
+                        new
+                        {
+                            key = "key 2",
+                            value = "value 2"
+                        }
+                    }
+                },
+                {
+                    "C#",
+                    new[]
                     {
-                        key = "key 2",
-                        value = "value 2"
+                        new
+                        {
+                            key = "key 3",
+                            value = "value 3"
+                        },
+                        new
+                        {
+                            key = "key 4",
+                            value = "value 4"
+                        }
                     }
                 }
             });
-
-            JToken csharp = JToken.FromObject(new[]
-            {
-                new
-                {
-                    key = "key 3",
-                    value = "value 3"
-                },
-                new
-                {
-                    key = "key 4",
-                    value = "value 4"
-                }
-            });
-
-            settings.Add(new JProperty("C#", csharp.ToObject<object>()));
-
-            return settings;
-        }
-
-        private void testExtensions(JObject extensions,
-            Dictionary<string, List<string>> result)
-        {
-            string[] keys =
-            {
-                "Required",
-                "C#"
-            };
-
-            foreach (string key in keys)
-            {
-                if (result.ContainsKey(key))
-                {
-                    var list = result[key];
-                    JArray arr = (JArray) extensions[key];
-
-                    for (int i = 0; i < 2; i++)
-                        Assert.IsTrue(list[i] == arr[i].ToString());
-                }
-                else
-                    Assert.Fail($"No Key found for '{key}'");
-            }
         }
 
         private void testSettings(JObject settings,
-            Dictionary<string, List<Setting>> result)
+            Dictionary<string, List<Setting>> result,
+            IPlatformService platformService)
         {
             string[] keys =
             {
@@ -475,7 +456,8 @@ namespace codesetTest.Tests
                     JArray arr = (JArray) settings[key];
 
                     for (int i = 0; i < 2; i++)
-                        Assert.IsTrue(list[i].Equals(new Setting((JObject) arr[i])));
+                        Assert.IsTrue(list[i].Equals(new Setting((JObject) arr[i],
+                            platformService)));
                 }
                 else
                     Assert.Fail($"No Key found for '{key}'");
