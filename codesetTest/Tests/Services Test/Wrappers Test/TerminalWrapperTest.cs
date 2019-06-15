@@ -1,10 +1,11 @@
 using System;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using codeset.Models;
-using codeset.Wrappers;
+using codeset.Services;
+using codeset.Services.Wrappers;
 
-namespace codesetTest.Tests
+namespace codesetTest.Tests.ServicesTest.WrappersTest
 {
     [TestClass]
     public class TerminalWrapperTest
@@ -23,14 +24,8 @@ namespace codesetTest.Tests
         /// </para>
         /// </summary>
         [TestMethod]
-        public void ExecuteNullTest()
-        {
-            Assert.ThrowsException<ArgumentNullException>(() =>
-            {
-                TerminalWrapper terminal = new TerminalWrapper();
-                terminal.Execute(null);
-            });
-        }
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ExecuteNullTest() => setUpExecuteMethod(null);
 
         /// <summary>
         /// <para>
@@ -46,18 +41,12 @@ namespace codesetTest.Tests
         [TestMethod]
         public void ExecuteEmptyTest()
         {
-            try
-            {
-                TerminalWrapper terminal = new TerminalWrapper();
-                string result = terminal.Execute("");
+            // Arrange & Act
+            string result = setUpExecuteMethod("");
 
-                Assert.IsNotNull(result);
-                Assert.IsTrue(string.IsNullOrEmpty(result));
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsTrue(string.IsNullOrEmpty(result));
         }
 
         /// <summary>
@@ -75,18 +64,11 @@ namespace codesetTest.Tests
         [TestMethod]
         public void ExecuteEchoTest()
         {
-            try
-            {
-                TerminalWrapper terminal = new TerminalWrapper();
-                string result = terminal.Execute("echo 'testing'");
+            // Arrange & Act
+            string result = setUpExecuteMethod("echo 'testing'");
 
-                Assert.IsNotNull(result);
-                Assert.IsTrue(result == "testing");
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
+            // Assert
+            Assert.IsTrue(result == "testing");
         }
 
         /// <summary>
@@ -106,23 +88,28 @@ namespace codesetTest.Tests
         [TestMethod]
         public void ExecuteMultipleEchoTest()
         {
-            try
-            {
-                TerminalWrapper terminal = new TerminalWrapper();
-                string result = terminal.Execute("echo 'testing'");
+            // Arrange
+            var platformService = new PlatformService();
+            TerminalWrapper terminal = new TerminalWrapper(platformService);
 
-                Assert.IsNotNull(result);
-                Assert.IsTrue(result == "testing");
+            // Act
+            string result = terminal.Execute("echo 'testing'");
+            string result2 = terminal.Execute("echo 'testing 2'");
 
-                result = terminal.Execute("echo 'testing 2'");
+            // Assert
+            Assert.IsTrue(result == "testing");
+            Assert.IsTrue(result2 == "testing 2");
+        }
 
-                Assert.IsNotNull(result);
-                Assert.IsTrue(result == "testing 2");
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
+        //* Private Methods
+        private string setUpExecuteMethod(string command)
+        {
+            // Arrange
+            var platformService = new PlatformService();
+            TerminalWrapper terminal = new TerminalWrapper(platformService);
+
+            // Act
+            return terminal.Execute(command);
         }
     }
 }
