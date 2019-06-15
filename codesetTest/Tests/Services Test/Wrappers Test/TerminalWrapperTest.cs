@@ -31,7 +31,7 @@ namespace codesetTest.Tests.ServicesTest.WrappersTest
         public void ExecuteEchoTest()
         {
             // Arrange & Act
-            string result = setUpExecuteMethod("echo 'testing'");
+            string result = setUpExecuteMethod("echo testing");
 
             // Assert
             Assert.IsTrue(result == "testing");
@@ -45,8 +45,8 @@ namespace codesetTest.Tests.ServicesTest.WrappersTest
             var terminalWrapper = new TerminalWrapper(platformService);
 
             // Act
-            string result = terminalWrapper.Execute("echo 'testing'");
-            string result2 = terminalWrapper.Execute("echo 'testing 2'");
+            string result = terminalWrapper.Execute("echo testing");
+            string result2 = terminalWrapper.Execute("echo testing 2");
 
             // Assert
             Assert.IsTrue(result == "testing");
