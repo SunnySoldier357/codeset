@@ -1,33 +1,29 @@
 using System;
+using System.Runtime.InteropServices;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Newtonsoft.Json.Linq;
 
 using codeset.Models;
-using static codeset.Models.Utility;
+using codeset.Services;
 
-namespace codesetTest.Tests
+namespace codesetTest.Tests.ModelsTest
 {
     [TestClass]
     public class SettingTest
     {
         //* Test Methods
 
-        /// <summary>
-        /// <para>
-        /// Tests if the Setting class constructor can correctly handle null value.
-        /// </para>
-        /// <para>
-        /// Input: null for setting
-        /// </para>
-        /// <para>
-        /// Expected Output: ArgumentNullException thrown
-        /// </para>
-        /// </summary>
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void ConstructorNullTest()
         {
-            Assert.ThrowsException<ArgumentNullException>(() =>
-                new Setting(null));
+            // Arrange
+            var platformService = new MockPlatformService(OSPlatform.Linux);
+
+            // Act
+            _ = new Setting(null, platformService);
         }
 
         /// <summary>
@@ -51,14 +47,20 @@ namespace codesetTest.Tests
         [TestMethod]
         public void ConstructorSimpleTest()
         {
+            // Arrange
+            string key = "testkey";
+            JToken value = JToken.FromObject("testValue");
+
             JObject setting = JObject.FromObject(new
             {
-                key = "testKey",
-                value = "testValue"
+                key,
+                value
             });
 
-            createAndTestSetting(setting, "testKey",
-                JToken.FromObject("testValue"), null);
+            var platformService = new MockPlatformService(OSPlatform.Linux);
+
+            // Act & Assert
+            createAndTestSetting(setting, key, value, null, platformService);
         }
 
         /// <summary>
@@ -86,6 +88,9 @@ namespace codesetTest.Tests
         [TestMethod]
         public void ConstructorValueArrayTest()
         {
+            // Arrange
+            string key = "testKey";
+            
             JArray value = JArray.FromObject(new string[]
             {
                 "item1",
@@ -94,11 +99,14 @@ namespace codesetTest.Tests
 
             JObject setting = JObject.FromObject(new
             {
-                key = "testKey",
+                key,
                 value
             });
 
-            createAndTestSetting(setting, "testKey", value, null);
+            var platformService = new MockPlatformService(OSPlatform.Linux);
+
+            // Act & Assert
+            createAndTestSetting(setting, key, value, null, platformService);
         }
 
         /// <summary>
@@ -127,6 +135,9 @@ namespace codesetTest.Tests
         [TestMethod]
         public void ConstructorValueObjectTest()
         {
+            // Arrange
+            string key = "testKey";
+
             JObject value = JObject.FromObject(new
             {
                 test = "value 1",
@@ -135,17 +146,20 @@ namespace codesetTest.Tests
 
             JObject setting = JObject.FromObject(new
             {
-                key = "testKey",
+                key,
                 value
             });
 
-            createAndTestSetting(setting, "testKey", value, null);
+            var platformService = new MockPlatformService(OSPlatform.Linux);
+
+            // Act & Assert
+            createAndTestSetting(setting, key, value, null, platformService);
         }
 
         /// <summary>
         /// <para>
         /// Tests if the Setting class constructor can handle a simple key-value
-        /// pair value provided and return the correct value for the current OS.
+        /// pair value provided and return the correct value for the Linux OS.
         /// </para>
         /// <para>
         /// Input:
@@ -155,40 +169,70 @@ namespace codesetTest.Tests
         ///     "value": {
         ///         "windows": "windows",
         ///         "osx": "osx",
-        ///         "linux": "manjaro"
+        ///         "linux": "linux"
         ///     }
         /// }
         /// </code>
         /// </para>
         /// <para>
-        /// Expected Output: Key: "testKey", Value (Windows): "windows", Value (OSX):
-        /// "osx", Value (Linux): "manjaro", Instruction: null
+        /// Expected Output: Key: "testKey", Value: "linux", Instruction: null
         /// </para>
         /// </summary>
         [TestMethod]
-        public void ConstructorValueOSTest()
-        {
-            JObject setting = JObject.FromObject(new
-            {
-                key = "testKey",
-                value = new
-                {
-                    windows = "windows",
-                    osx = "osx",
-                    linux = "manjaro"
-                }
-            });
+        public void ConstructorStringValueLinuxTest() =>
+            testStringValueForOs(OSPlatform.Linux);
 
-            string value = "windows";
+        /// <summary>
+        /// <para>
+        /// Tests if the Setting class constructor can handle a simple key-value
+        /// pair value provided and return the correct value for the Mac (OSX) OS.
+        /// </para>
+        /// <para>
+        /// Input:
+        /// <code>
+        /// {
+        ///     "key": "testKey",
+        ///     "value": {
+        ///         "windows": "windows",
+        ///         "osx": "osx",
+        ///         "linux": "linux"
+        ///     }
+        /// }
+        /// </code>
+        /// </para>
+        /// <para>
+        /// Expected Output: Key: "testKey", Value: "osx", Instruction: null
+        /// </para>
+        /// </summary>
+        [TestMethod]
+        public void ConstructorStringValueOsxTest() =>
+            testStringValueForOs(OSPlatform.OSX);
 
-            if (IsOsLinux())
-                value = "manjaro";
-            else if (IsOsOsx())
-                value = "osx";
-
-            createAndTestSetting(setting, "testKey", JToken.FromObject(value),
-                null);
-        }
+        /// <summary>
+        /// <para>
+        /// Tests if the Setting class constructor can handle a simple key-value
+        /// pair value provided and return the correct value for the Windows OS.
+        /// </para>
+        /// <para>
+        /// Input:
+        /// <code>
+        /// {
+        ///     "key": "testKey",
+        ///     "value": {
+        ///         "windows": "windows",
+        ///         "osx": "osx",
+        ///         "linux": "linux"
+        ///     }
+        /// }
+        /// </code>
+        /// </para>
+        /// <para>
+        /// Expected Output: Key: "testKey", Value: "windows", Instruction: null
+        /// </para>
+        /// </summary>
+        [TestMethod]
+        public void ConstructorStringValueWindowsTest() =>
+            testStringValueForOs(OSPlatform.Windows);
 
         /// <summary>
         /// <para>
@@ -212,14 +256,21 @@ namespace codesetTest.Tests
         [TestMethod]
         public void ConstructorInstructionTest()
         {
+            // Arrange
+            string key = "testKey";
+            string instruction = "testInstruction";
+
             JObject setting = JObject.FromObject(new
             {
-                key = "testKey",
+                key,
                 value = "testValue",
-                instruction = "testInstruction"
+                instruction
             });
 
-            createAndTestSetting(setting, "testKey", null, "testInstruction");
+            var platformService = new MockPlatformService(OSPlatform.Linux);
+
+            // Act & Assert
+            createAndTestSetting(setting, key, null, instruction, platformService);
         }
 
         // TODO: Create a test to test for different OS Values where the value is
@@ -240,31 +291,54 @@ namespace codesetTest.Tests
         /// The right value for Setting's Instruction property.
         /// </param>
         private void createAndTestSetting(JObject json, string key, JToken value,
-            string instruction)
+            string instruction, IPlatformService platformService)
         {
-            try
-            {
-                Setting setting = new Setting(json);
+            // Act
+            Setting setting = new Setting(json, platformService);
 
-                Assert.IsTrue(setting.Instruction == instruction,
-                    string.Format("Instruction - Expected Output: {0} vs Output: {1}",
-                        instruction, setting.Instruction));
-                Assert.IsTrue(setting.Key == key,
-                    string.Format("Key - Expected Output: {0} vs Output: {1}",
-                        key, setting.Key));
-                if (setting.ValueForOS == null && value == null)
-                    Assert.IsNull(value);
-                else
-                {
-                    Assert.IsTrue(setting.ValueForOS?.ToString() == value?.ToString(),
-                        string.Format("Value - Expected Output: {0} vs Output: {1}",
-                            value?.ToString(), setting.ValueForOS?.ToString()));
-                }
-            }
-            catch (Exception e)
+            // Assert
+            Assert.IsTrue(setting.Instruction == instruction,
+                string.Format("Instruction - Expected Output: {0} vs Output: {1}",
+                    instruction, setting.Instruction));
+            Assert.IsTrue(setting.Key == key,
+                string.Format("Key - Expected Output: {0} vs Output: {1}",
+                    key, setting.Key));
+            
+            if (setting.ValueForOS != null && value != null)
+                Assert.IsTrue(setting.ValueForOS.ToString() == value.ToString(),
+                    string.Format("Value - Expected Output: {0} vs Output: {1}",
+                        value.ToString(), setting.ValueForOS.ToString()));
+        }
+
+        private void testStringValueForOs(OSPlatform platform)
+        {
+            // Arrange
+            string key = "testKey";
+
+            JObject setting = JObject.FromObject(new
             {
-                Assert.Fail(e.Message);
-            }
+                key,
+                value = new
+                {
+                    windows = "windows",
+                    osx = "osx",
+                    linux = "linux"
+                }
+            });
+
+            IPlatformService platformService = new MockPlatformService(platform);
+
+            string value = "windows";
+
+            if (platformService.IsOsLinux())
+                value = "linux";
+            else if (platformService.IsOsOsx())
+                value = "osx";
+
+            JToken valueToken = JToken.FromObject(value);
+
+            // Assert & Act
+            createAndTestSetting(setting, key, valueToken, null, platformService);
         }
     }
 }
