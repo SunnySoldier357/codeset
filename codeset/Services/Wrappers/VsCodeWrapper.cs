@@ -59,6 +59,9 @@ namespace codeset.Services.Wrappers
             if (extension == null)
                 throw new ArgumentNullException(nameof(extension));
 
+            if (string.IsNullOrWhiteSpace(extension))
+                throw new ArgumentException(nameof(extension));
+
             string result = terminalWrapper.Execute(string.Format("code --uninstall-extension {0}", extension));
         }
 
