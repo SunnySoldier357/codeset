@@ -27,9 +27,11 @@ namespace codesetTest.Tests.ServicesTest.WrappersTest
             // Arrange
             var platformService = new MockPlatformService(OSPlatform.Linux);
             var settingsService = new MockSettingsService("");
-            
-            // Act
+
             var configWrapper = new ConfigWrapper(platformService, settingsService);
+
+            // Act
+            _ = configWrapper.Categories;
         }
 
         /// <summary>
@@ -77,15 +79,17 @@ namespace codesetTest.Tests.ServicesTest.WrappersTest
             var platformService = new MockPlatformService(OSPlatform.Linux);
             var settingsService = new MockSettingsService(path);
 
-            // Act
             var configWrapper = new ConfigWrapper(platformService, settingsService);
 
+            // Act
+            var result = configWrapper.Categories;
+
             // Assert
-            var result = configWrapper.Categories
+            var test = result
                 .Where(c => c != "Required")
                 .ToList();
 
-            CollectionAssert.AreEquivalent(categories, result);
+            CollectionAssert.AreEquivalent(categories, test);
             CollectionAssert.Contains(configWrapper.Categories, "Required");
 
             // Cleanup
@@ -139,15 +143,15 @@ namespace codesetTest.Tests.ServicesTest.WrappersTest
             var platformService = new MockPlatformService(OSPlatform.Linux);
             var settingsService = new MockSettingsService(path);
 
-            // Act
             var configWrapper = new ConfigWrapper(platformService, settingsService);
 
+            // Act
+            var result = configWrapper.Extensions;
+
             // Assert
-            CollectionAssert.AreEquivalent(extensions.Keys, configWrapper.Extensions.Keys);
-            CollectionAssert.AreEquivalent(extensions["Required"],
-                configWrapper.Extensions["Required"]);
-            CollectionAssert.AreEquivalent(extensions["C#"],
-                configWrapper.Extensions["C#"]);
+            CollectionAssert.AreEquivalent(extensions.Keys, result.Keys);
+            CollectionAssert.AreEquivalent(extensions["Required"], result["Required"]);
+            CollectionAssert.AreEquivalent(extensions["C#"], result["C#"]);
 
             // Cleanup
             FileUtility.DeleteFile(fileName, FileExtension.Json);
@@ -211,15 +215,15 @@ namespace codesetTest.Tests.ServicesTest.WrappersTest
             var platformService = new MockPlatformService(OSPlatform.Linux);
             var settingsService = new MockSettingsService(configPath);
 
-            // Act
             var configWrapper = new ConfigWrapper(platformService, settingsService);
 
+            // Act
+            var result = configWrapper.Extensions;
+
             // Assert
-            CollectionAssert.AreEquivalent(extensions.Keys, configWrapper.Extensions.Keys);
-            CollectionAssert.AreEquivalent(extensions["Required"],
-                configWrapper.Extensions["Required"]);
-            CollectionAssert.AreEquivalent(extensions["C#"],
-                configWrapper.Extensions["C#"]);
+            CollectionAssert.AreEquivalent(extensions.Keys, result.Keys);
+            CollectionAssert.AreEquivalent(extensions["Required"], result["Required"]);
+            CollectionAssert.AreEquivalent(extensions["C#"], result["C#"]);
 
             // Cleanup
             FileUtility.DeleteFile(configFileName, FileExtension.Json);
@@ -285,11 +289,13 @@ namespace codesetTest.Tests.ServicesTest.WrappersTest
             var platformService = new MockPlatformService(OSPlatform.Linux);
             var settingsService = new MockSettingsService(path);
 
-            // Act
             var configWrapper = new ConfigWrapper(platformService, settingsService);
 
+            // Act
+            var result = configWrapper.Settings;
+
             // Assert
-            testSettings(settings, configWrapper.Settings, platformService);
+            testSettings(settings, result, platformService);
 
             // Cleanup
             FileUtility.DeleteFile(fileName, FileExtension.Json);
@@ -364,11 +370,13 @@ namespace codesetTest.Tests.ServicesTest.WrappersTest
             var platformService = new MockPlatformService(OSPlatform.Linux);
             var settingsService = new MockSettingsService(configPath);
 
-            // Act
             var configWrapper = new ConfigWrapper(platformService, settingsService);
 
+            // Act
+            var result = configWrapper.Settings;
+
             // Assert
-            testSettings(settings, configWrapper.Settings, platformService);
+            testSettings(settings, result, platformService);
 
             // Cleanup
             FileUtility.DeleteFile(configFileName, FileExtension.Json);

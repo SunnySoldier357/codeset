@@ -16,78 +16,16 @@ namespace codeset.Services.Wrappers
         private readonly ISettingsService settingsService;
 
         //* Public Properties
-        public Dictionary<string, List<string>> Extensions { get; }
-        public Dictionary<string, List<Setting>> Settings { get; }
+        public Dictionary<string, List<string>> Extensions => getExtensions();
+        public Dictionary<string, List<Setting>> Settings => getSettings();
 
-        public List<string> Categories { get; }
+        public List<string> Categories => getCategories();
 
         //* Constructor
         public ConfigWrapper(IPlatformService platformService, ISettingsService settingsService)
         {
             this.platformService = platformService;
             this.settingsService = settingsService;
-
-            JToken categoriesJson = null;
-            JToken extensionsJson = null;
-            JToken settingsJson = null;
-
-            JObject extensions = null;
-            JObject settings = null;
-
-            using (StreamReader stream = new StreamReader(
-                new FileStream(this.settingsService.ConfigPath, FileMode.Open)))
-            {
-                JObject configFile = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
-
-                categoriesJson = configFile["categories"];
-                extensionsJson = configFile["extensions"];
-                settingsJson = configFile["settings"];
-            }
-            
-            if (categoriesJson != null)
-                Categories = convertCategoriesToList(categoriesJson);
-            else
-                Categories = new List<string>();
-
-            Categories.Add("Required");
-
-            if (extensionsJson == null)
-                Extensions = null;
-            else
-            {
-                if (extensionsJson is JObject)
-                    extensions = (JObject) extensionsJson;
-                else
-                {
-                    // Get the JSON file at that path and set extensions to that
-                    using (StreamReader stream = new StreamReader(
-                        new FileStream(extensionsJson.ToString(), FileMode.Open)))
-                    {
-                        extensions = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
-                    }
-                }
-
-                Extensions = convertExtensionsToDic(extensions);
-            }
-
-            if (settingsJson == null)
-                Settings = null;
-            else
-            {
-                if (settingsJson is JObject)
-                    settings = (JObject) settingsJson;
-                else
-                {
-                    // Get the JSON file at that path and set extensions to that
-                    using (StreamReader stream = new StreamReader(
-                        new FileStream(settingsJson.ToString(), FileMode.Open)))
-                    {
-                        settings = (JObject) JToken.ReadFrom(new JsonTextReader(stream));
-                    }
-                }
-
-                Settings = convertSettingsToDic(settings);
-            }
         }
 
         //* Private Methods
@@ -141,6 +79,107 @@ namespace codeset.Services.Wrappers
             }
 
             return dictionary;
+        }
+
+        private List<string> getCategories()
+        {
+            JToken json = null;
+
+            using (FileStream fileStream = new FileStream(settingsService.ConfigPath,
+                FileMode.Open))
+            using (StreamReader streamReader = new StreamReader(fileStream))
+            using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+            {
+                JObject configFile = (JObject) JToken.ReadFrom(jsonTextReader);
+
+                json = configFile[nameof(Categories).ToLower()];
+            }
+
+            List<string> result;
+
+            if (json != null)
+                result = convertCategoriesToList(json);
+            else
+                result = new List<string>();
+
+            result.Add("Required");
+            return result;
+        }
+
+        private Dictionary<string, List<string>> getExtensions()
+        {
+            JToken json = null;
+
+            using (FileStream fileStream = new FileStream(settingsService.ConfigPath,
+                FileMode.Open))
+            using (StreamReader streamReader = new StreamReader(fileStream))
+            using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+            {
+                JObject configFile = (JObject) JToken.ReadFrom(jsonTextReader);
+
+                json = configFile[nameof(Extensions).ToLower()];
+            }
+
+            JObject extensions;
+
+            if (json == null)
+                return null;
+            else
+            {
+                if (json is JObject)
+                    extensions = (JObject) json;
+                else
+                {
+                    // Get the JSON file at that path and set extensions to that
+                    using (FileStream fileStream = new FileStream(json.ToString(),
+                        FileMode.Open))
+                    using (StreamReader streamReader = new StreamReader(fileStream))
+                    using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+                    {
+                        extensions = (JObject) JToken.ReadFrom(jsonTextReader);
+                    }
+                }
+
+                return convertExtensionsToDic(extensions);
+            }
+        }
+
+        private Dictionary<string, List<Setting>> getSettings()
+        {
+            JToken json = null;
+
+            using (FileStream fileStream = new FileStream(settingsService.ConfigPath,
+                FileMode.Open))
+            using (StreamReader streamReader = new StreamReader(fileStream))
+            using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+            {
+                JObject configFile = (JObject) JToken.ReadFrom(jsonTextReader);
+
+                json = configFile[nameof(Settings).ToLower()];
+            }
+
+            JObject settings;
+
+            if (json == null)
+                return null;
+            else
+            {
+                if (json is JObject)
+                    settings = (JObject) json;
+                else
+                {
+                    // Get the JSON file at that path and set settings to that
+                    using (FileStream fileStream = new FileStream(json.ToString(),
+                        FileMode.Open))
+                    using (StreamReader streamReader = new StreamReader(fileStream))
+                    using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+                    {
+                        settings = (JObject) JToken.ReadFrom(jsonTextReader);
+                    }
+                }
+
+                return convertSettingsToDic(settings);
+            }
         }
     }
 }
