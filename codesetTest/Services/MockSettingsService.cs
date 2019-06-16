@@ -2,14 +2,17 @@ namespace codeset.Services
 {
     public class MockSettingsService : ISettingsService
     {
-        //* Private Properties
-        private string configPath;
-
         //* Public Properties
-        public string ConfigPath => configPath;
+        public string ConfigPath { get; set; }
+        public string UserSettingsPath { get; set; }
 
         //* Constructors
-        public MockSettingsService(string configPath) =>
-            this.configPath = configPath;
+        public MockSettingsService(string configPath) : this(configPath, null) { }
+
+        public MockSettingsService(string configPath, string userSettingsPath)
+        {
+            ConfigPath = configPath;
+            UserSettingsPath = userSettingsPath;
+        }
     }
 }

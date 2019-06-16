@@ -8,6 +8,7 @@ namespace codeset.Services
     {
         //* Private Properties
         private string configPath;
+        private string userSettingsPath;
 
         //* Public Properties
         public string ConfigPath
@@ -16,19 +17,45 @@ namespace codeset.Services
             {
                 if (configPath == null)
                 {
-                    string path = Environment.GetEnvironmentVariable("HOME");
+                    string home = Environment
+                        .GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-                    DirectoryInfo dir = new DirectoryInfo(path);
+                    string path = Path.Combine(home, ".config",
+                        "codeset", "config.json");
 
-                    dir = dir.GetDirectories().FirstOrDefault(d => d.Name == ".config");
-                    dir = dir.GetDirectories().FirstOrDefault(d => d.Name == "codeset");
-                    var configFile = dir.GetFiles().FirstOrDefault(f => f.Name == "config.json");
+                    FileInfo file = new FileInfo(path);
 
-                    configPath = configFile.FullName;
+                    if (file.Exists)
+                        configPath = file.FullName;
                 }
 
                 return configPath;
             }
+        }
+        public string UserSettingsPath => userSettingsPath;
+
+        //* Constructors
+        public SettingsService(IPlatformService platformService)
+        {
+            string path = "";
+
+            if (platformService.IsOsWindows())
+            {
+                path = Environment
+                    .GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            }
+            else
+            {
+                string home = Environment
+                    .GetFolderPath(Environment.SpecialFolder.UserProfile);
+                
+                if (platformService.IsOsLinux())
+                    path = Path.Combine(home, ".config");
+                else
+                    path = Path.Combine(home, "Library", "Application Support");
+            }
+
+            userSettingsPath = Path.Combine(path, "Code", "User", "settings.json");
         }
     }
 }
