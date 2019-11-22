@@ -68,14 +68,24 @@ namespace codeset.Models
                 Value = null;
         }
 
+        public Setting(string key, JToken value, string instruction,
+            IPlatformService platformService)
+        {
+            Key = key;
+            Value = value;
+            Instruction = instruction;
+
+            this.platformService = platformService;
+        }
+
         //* Overridden Methods
         public override bool Equals(object obj)
         {
             if (obj is Setting other)
             {
-                return Instruction == other.Instruction &&
-                    Key == other.Key &&
-                    Value.Equals(other.Value);
+                return Instruction == other?.Instruction &&
+                    Key == other?.Key &&
+                    Value.Equals(other?.Value);
             }
 
             return false;

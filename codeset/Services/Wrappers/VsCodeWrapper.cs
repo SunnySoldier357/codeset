@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace codeset.Services.Wrappers
 {
@@ -9,12 +13,17 @@ namespace codeset.Services.Wrappers
         //* Private Properties
         private readonly IConfigWrapper configWrapper;
 
+        private readonly ISettingsService settingsService;
+
         private readonly ITerminalWrapper terminalWrapper;
 
         //* Constructors
-        public VsCodeWrapper(IConfigWrapper configWrapper, ITerminalWrapper terminalWrapper)
+        public VsCodeWrapper(IConfigWrapper configWrapper,
+            ITerminalWrapper terminalWrapper,
+            ISettingsService settingsService = null)
         {
             this.configWrapper = configWrapper;
+            this.settingsService = settingsService;
             this.terminalWrapper = terminalWrapper;
         }
 
@@ -139,9 +148,35 @@ namespace codeset.Services.Wrappers
                 Console.WriteLine("All Required extensions are already installed.");
         }
 
+        public JObject GetUserSettings()
+        {
+            using (FileStream fileStream =
+                new FileStream(settingsService.UserSettingsPath, FileMode.Open))
+            using (StreamReader streamReader = new StreamReader(fileStream))
+            using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+            {
+                return (JObject) JToken.ReadFrom(jsonTextReader);
+            }
+        }
+
+        public void WriteUserSettings(JObject userSettings)
+        {
+            using (FileStream fileStream =
+                new FileStream(settingsService.UserSettingsPath, FileMode.Open))
+            using (StreamWriter streamWriter = new StreamWriter(fileStream))
+            using (JsonTextWriter jsonTextWriter = new JsonTextWriter(streamWriter))
+            {
+                userSettings.WriteTo(jsonTextWriter);
+            }
+        }
+
         public void UpdateSettings()
         {
+            JObject userSettings = GetUserSettings();
+
+            // 2) Update the values of the user's settings locally
             
+            WriteUserSettings(userSettings);
         }
     }
 }

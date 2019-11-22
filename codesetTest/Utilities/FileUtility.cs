@@ -51,7 +51,7 @@ namespace codesetTest.Utilities
         }
 
         /// <summary>
-        /// Deletes the  file specified from the automatically created Test
+        /// Deletes the file specified from the automatically created Test
         /// folder (deep in Debug folder).
         /// </summary>
         /// <param name="fileName">The name of the file to be deleted.</param>
@@ -69,6 +69,24 @@ namespace codesetTest.Utilities
             if (testDir.GetFiles().Length == 0 &&
                 testDir.GetDirectories().Length == 0)
                 testDir.Delete();
+        }
+
+        public static string ReadFile(string fileName, FileExtension fileExtension)
+        {
+            string fullFileName = string.Format("{0}.{1}", fileName,
+                fileExtension.ToString().ToLower());
+            DirectoryInfo testDir = new DirectoryInfo(RootPath);
+            FileInfo file = new FileInfo(Path.Combine(RootPath, fullFileName));
+
+            if (file.Exists)
+            {
+                using (StreamReader streamReader = new StreamReader(file.OpenRead()))
+                {
+                    return streamReader.ReadToEnd();
+                }
+            }
+            else
+                return null;
         }
     }
 }
