@@ -3,6 +3,12 @@ using codeset.Services.Wrappers;
 
 namespace codeset.Services
 {
+    public interface ICommandService
+    {
+        //* Interface Methods
+        int HandleCommand(Options options);
+    }
+    
     public class CommandService : ICommandService
     {
         //* Private Properties

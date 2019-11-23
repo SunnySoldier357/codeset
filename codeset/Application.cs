@@ -5,6 +5,12 @@ using codeset.Services;
 
 namespace codeset
 {
+    public interface IApplication
+    {
+        //* Interface Methods
+        void Run(string[] args);
+    }
+    
     public class Application : IApplication
     {
         //* Private Properties

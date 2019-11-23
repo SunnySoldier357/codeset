@@ -1,9 +1,14 @@
 using System;
 using System.IO;
-using System.Linq;
 
 namespace codeset.Services
 {
+    public interface ISettingsService
+    {
+        string ConfigPath { get; }
+        string UserSettingsPath { get; }
+    }
+
     public class SettingsService : ISettingsService
     {
         //* Private Properties

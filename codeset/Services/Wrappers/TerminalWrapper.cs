@@ -3,6 +3,12 @@ using System.Diagnostics;
 
 namespace codeset.Services.Wrappers
 {
+    public interface ITerminalWrapper
+    {
+        //* Interface Methods
+        string Execute(string command);
+    }
+    
     public class TerminalWrapper : ITerminalWrapper
     {
         //* Private Properties
