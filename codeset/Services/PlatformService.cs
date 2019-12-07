@@ -13,6 +13,9 @@ namespace codeset.Services
         bool IsOsWindows();
     }
     
+    /// <summary>
+    /// A Service that determines the current OS that is running codeset.
+    /// </summary>
     public class PlatformService : IPlatformService
     {
         //* Private Properties

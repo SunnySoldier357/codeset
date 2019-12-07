@@ -9,6 +9,10 @@ namespace codeset.Services.Wrappers
         string Execute(string command);
     }
     
+    /// <summary>
+    /// A wrapper for the terminal to execute commands and return outputs as
+    /// strings.
+    /// </summary>
     public class TerminalWrapper : ITerminalWrapper
     {
         //* Private Properties

@@ -17,6 +17,10 @@ namespace codeset.Services.Wrappers
         List<string> Categories { get; }
     }
 
+    /// <summary>
+    /// A wrapper for the codeset.json file, exposing the categories, extensions
+    /// and settings information from the config.json file.
+    /// </summary>
     public class ConfigWrapper : IConfigWrapper
     {
         //* Private Properties

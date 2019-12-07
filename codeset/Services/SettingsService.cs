@@ -9,6 +9,10 @@ namespace codeset.Services
         string UserSettingsPath { get; }
     }
 
+    /// <summary>
+    /// A Service that handles getting the file locations of the codeset
+    /// config.json file as well as the user's VS Code's settings.json file.
+    /// </summary>
     public class SettingsService : ISettingsService
     {
         //* Private Properties

@@ -20,6 +20,10 @@ namespace codeset.Services.Wrappers
         void UpdateSettings();
     }
     
+    /// <summary>
+    /// A wrapper over VS Code itself, handling operations like installing
+    /// extensions as well as updating the user's settings.
+    /// </summary>
     public class VsCodeWrapper : IVsCodeWrapper
     {
         //* Private Properties
